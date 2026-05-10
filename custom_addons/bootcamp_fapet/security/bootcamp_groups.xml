@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="module_bootcamp_fapet" model="ir.module.category">
+            <field name="name">Bootcamp Fapet</field>
+            <field name="description">Role-role dalam sistem Bootcamp Fapet Unpad</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="group_direktur" model="res.groups">
+            <field name="name">Direktur / Komisaris</field>
+            <field name="category_id" ref="module_bootcamp_fapet"/>
+            <field name="comment">
+                Akses penuh ke semua dashboard (keuangan, operasional, SDM/KPI).
+            </field>
+        </record>
+
+        <record id="group_kepala_keuangan" model="res.groups">
+            <field name="name">Kepala Divisi Keuangan</field>
+            <field name="category_id" ref="module_bootcamp_fapet"/>
+            <field name="comment">
+                Akses ke dashboard keuangan dan input biaya operasional.
+            </field>
+        </record>
+
+        <record id="group_manajer_operasional" model="res.groups">
+            <field name="name">Manajer Operasional</field>
+            <field name="category_id" ref="module_bootcamp_fapet"/>
+            <field name="comment">
+                Akses ke dashboard operasional SDM/KPI dan penetapan target KPI.
+            </field>
+        </record>
+
+        <record id="group_kepala_prosesing" model="res.groups">
+            <field name="name">Kepala Divisi Prosesing dan Produksi</field>
+            <field name="category_id" ref="module_bootcamp_fapet"/>
+            <field name="comment">
+                Akses ke dashboard operasional pengadaan dan input stok bahan baku.
+            </field>
+        </record>
+
+        <record id="group_staff_it" model="res.groups">
+            <field name="name">Kepala dan Staff IT</field>
+            <field name="category_id" ref="module_bootcamp_fapet"/>
+            <field name="comment">
+                Akses ke konfigurasi sistem dan pengelolaan hak akses.
+            </field>
+        </record>
+    </data>
+</odoo>
