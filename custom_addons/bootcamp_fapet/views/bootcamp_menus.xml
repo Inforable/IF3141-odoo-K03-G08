@@ -6,4 +6,5 @@
     <menuitem id="menu_dashboard_pengadaan" name="Dashboard Operasional Pengadaan" parent="menu_bootcamp_root" sequence="3" groups="bootcamp_fapet.group_direktur,bootcamp_fapet.group_kepala_prosesing"/>
     <menuitem id="menu_dashboard_sdm" name="Dashboard Operasional SDM (KPI)" parent="menu_bootcamp_root" sequence="4" groups="bootcamp_fapet.group_direktur,bootcamp_fapet.group_manajer_operasional,bootcamp_fapet.group_kepala_keuangan,bootcamp_fapet.group_kepala_prosesing"/>
     <menuitem id="menu_konfigurasi" name="Konfigurasi Sistem" parent="menu_bootcamp_root" sequence="10" groups="bootcamp_fapet.group_staff_it"/>
+    <menuitem id="menu_input_kpi_aktual" name="Input Ketercapaian KPI" parent="menu_bootcamp_root" sequence="5" action="action_kpi_aktual_qweb" groups="bootcamp_fapet.group_manajer_operasional,bootcamp_fapet.group_direktur"/>
 </odoo>
