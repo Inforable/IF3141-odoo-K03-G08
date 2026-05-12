@@ -71,7 +71,7 @@
                 </t>
                 
                 <t t-if="user_groups['is_direktur'] or user_groups['is_kepala_keuangan']">
-                    <a href="#" class="nav-item">
+                    <a href="/bootcamp/biaya-operasional" t-att-class="'nav-item ' + ('active' if active_menu == 'biaya_operasional' else '')">
                         <i class="fa fa-file-text"/> Input Biaya Operasional
                     </a>
                 </t>
@@ -95,7 +95,7 @@
                 </t>
                 
                 <t t-if="user_groups['is_direktur'] or user_groups['is_staff_it']">
-                    <a href="#" class="nav-item">
+                    <a href="/bootcamp/pos/sync" t-att-class="'nav-item ' + ('active' if active_menu == 'pos_sync' else '')">
                         <i class="fa fa-refresh"/> Sinkronisasi POS
                     </a>
                 </t>
