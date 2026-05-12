@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="component_sidebar" name="Sidebar Component Bootcamp">
+        <style>
+            .sidebar {
+                width: 240px; background: #2d1b3d; color: #fff;
+                display: flex; flex-direction: column; min-height: 100vh;
+                position: fixed; left: 0; top: 0; z-index: 100;
+            }
+            .sidebar-brand {
+                padding: 20px 20px 16px; font-size: 1.1rem; font-weight: 700;
+                letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.08);
+                display: flex; align-items: center; gap: 10px;
+            }
+            .sidebar-brand .brand-icon {
+                width: 32px; height: 32px; background: #7c3aed; border-radius: 8px;
+                display: flex; align-items: center; justify-content: center; font-size: 1rem;
+            }
+            .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+            .nav-item {
+                display: flex; align-items: center; gap: 12px; padding: 10px 20px;
+                color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.875rem;
+                transition: background 0.15s, color 0.15s; cursor: pointer;
+            }
+            .nav-item:hover { background: rgba(255,255,255,0.08); color: #fff; text-decoration: none; }
+            .nav-item.active { background: #7c3aed; color: #fff; }
+            .nav-item i { width: 18px; text-align: center; font-size: 0.95rem; }
+            .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.08); }
+            .user-info { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+            .user-avatar {
+                width: 36px; height: 36px; background: #7c3aed; border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                font-weight: 700; font-size: 0.9rem; color: #fff; flex-shrink: 0;
+            }
+            .user-name { font-size: 0.875rem; font-weight: 600; color: #fff; }
+            .user-role { font-size: 0.75rem; color: rgba(255,255,255,0.5); }
+            .logout-btn {
+                display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.6);
+                text-decoration: none; font-size: 0.8rem; padding: 6px 0; transition: color 0.15s;
+            }
+            .logout-btn:hover { color: #fff; text-decoration: none; }
+        </style>
+        
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">&#9632;</div>
+                Odoo
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="/bootcamp/dashboard" t-att-class="'nav-item ' + ('active' if active_menu == 'utama' else '')">
+                    <i class="fa fa-th-large"/> Dashboard Utama
+                </a>
+                
+                <t t-if="user_groups['is_direktur'] or user_groups['is_kepala_keuangan']">
+                    <a href="/bootcamp/dashboard/keuangan" t-att-class="'nav-item ' + ('active' if active_menu == 'keuangan' else '')">
+                        <i class="fa fa-dollar"/> Dashboard Keuangan
+                    </a>
+                </t>
+                
+                <t t-if="user_groups['is_direktur'] or user_groups['is_kepala_prosesing']">
+                    <a href="#" t-att-class="'nav-item ' + ('active' if active_menu == 'pengadaan' else '')">
+                        <i class="fa fa-cube"/> Dashboard Pengadaan
+                    </a>
+                </t>
+                
+                <t t-if="user_groups['is_direktur'] or user_groups['is_manajer_operasional'] or user_groups['is_kepala_keuangan'] or user_groups['is_kepala_prosesing']">
+                    <a href="#" t-att-class="'nav-item ' + ('active' if active_menu == 'kpi' else '')">
+                        <i class="fa fa-line-chart"/> Dashboard KPI
+                    </a>
+                </t>
+                
+                <t t-if="user_groups['is_direktur'] or user_groups['is_kepala_keuangan']">
+                    <a href="#" class="nav-item">
+                        <i class="fa fa-file-text"/> Input Biaya Operasional
+                    </a>
+                </t>
+                
+                <t t-if="user_groups['is_direktur'] or user_groups['is_kepala_prosesing']">
+                    <a href="#" class="nav-item">
+                        <i class="fa fa-archive"/> Input Stok Bahan Baku
+                    </a>
+                </t>
+                
+                <t t-if="user_groups['is_direktur'] or user_groups['is_manajer_operasional']">
+                    <a href="/bootcamp/kpi/aktual" t-att-class="'nav-item ' + ('active' if active_menu == 'input_kpi' else '')">
+                        <i class="fa fa-pencil-square-o"/> Input Ketercapaian KPI
+                    </a>
+                </t>
+
+                <t t-if="user_groups['is_direktur'] or user_groups['is_manajer_operasional']">
+                    <a href="#" class="nav-item">
+                        <i class="fa fa-bullseye"/> Target KPI
+                    </a>
+                </t>
+                
+                <t t-if="user_groups['is_direktur'] or user_groups['is_staff_it']">
+                    <a href="#" class="nav-item">
+                        <i class="fa fa-refresh"/> Sinkronisasi POS
+                    </a>
+                </t>
+                
+                <t t-if="user_groups['is_staff_it']">
+                    <a t-attf-href="/web#action=#{env.ref('bootcamp_fapet.action_kelola_hak_akses').id}" class="nav-item">
+                        <i class="fa fa-users"/> Kelola Hak Akses
+                    </a>
+                </t>
+                
+                <t t-if="user_groups['is_direktur'] or user_groups['is_staff_it']">
+                    <a href="#" class="nav-item">
+                        <i class="fa fa-history"/> Log Sistem
+                    </a>
+                </t>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <t t-esc="user.name[0].upper()"/>
+                    </div>
+                    <div>
+                        <div class="user-name" t-esc="user.name"/>
+                        <div class="user-role" t-esc="user.groups_id[0].name if user.groups_id else ''"/>
+                    </div>
+                </div>
+                <a href="/web/session/logout" class="logout-btn">
+                    <i class="fa fa-sign-out"/> Logout
+                </a>
+            </div>
+        </div>
+    </template>
+</odoo>
