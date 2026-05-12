@@ -231,7 +231,7 @@
                             <i class="fa fa-th-large"/> Dashboard Utama
                         </a>
                         <t t-if="user_groups['is_direktur'] or user_groups['is_kepala_keuangan']">
-                            <a href="#" class="nav-item">
+                            <a href="/bootcamp/dashboard/keuangan" class="nav-item">
                                 <i class="fa fa-dollar"/> Dashboard Keuangan
                             </a>
                         </t>
