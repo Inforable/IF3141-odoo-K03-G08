@@ -1,2 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 bootcamp_dashboard_all,Bootcamp Dashboard All,model_bootcamp_dashboard,,1,0,0,0
+access_kpi_target_manager,kpi.target.manager,model_bootcamp_kpi_target,bootcamp_fapet.group_manajer_operasional,1,1,1,1
+access_kpi_target_direktur,kpi.target.direktur,model_bootcamp_kpi_target,bootcamp_fapet.group_direktur,1,0,0,0
+access_kpi_aktual_manager,kpi.aktual.manager,model_bootcamp_kpi_aktual,bootcamp_fapet.group_manajer_operasional,1,1,1,1
+access_kpi_aktual_direktur,kpi.aktual.direktur,model_bootcamp_kpi_aktual,bootcamp_fapet.group_direktur,1,0,0,0

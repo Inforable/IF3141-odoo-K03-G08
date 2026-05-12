@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="kpi_target_produksi_1" model="bootcamp.kpi.target">
+        <field name="indikator">Efisiensi Produksi (%)</field>
+        <field name="divisi">Produksi</field>
+        <field name="target_nilai">95.0</field>
+    </record>
+
+    <record id="kpi_target_keuangan_1" model="bootcamp.kpi.target">
+        <field name="indikator">Akurasi Laporan (%)</field>
+        <field name="divisi">Keuangan</field>
+        <field name="target_nilai">90.0</field>
+    </record>
+
+    <record id="kpi_target_processing_1" model="bootcamp.kpi.target">
+        <field name="indikator">Kualitas Output (%)</field>
+        <field name="divisi">Processing</field>
+        <field name="target_nilai">85.0</field>
+    </record>
+
+    <record id="kpi_target_it_1" model="bootcamp.kpi.target">
+        <field name="indikator">Uptime Sistem (%)</field>
+        <field name="divisi">IT</field>
+        <field name="target_nilai">99.0</field>
+    </record>
+
+    <record id="kpi_target_hr_1" model="bootcamp.kpi.target">
+        <field name="indikator">Kepuasan Karyawan (%)</field>
+        <field name="divisi">HR</field>
+        <field name="target_nilai">80.0</field>
+    </record>
+
+    <record id="kpi_target_marketing_1" model="bootcamp.kpi.target">
+        <field name="indikator">Customer Satisfaction (%)</field>
+        <field name="divisi">Marketing</field>
+        <field name="target_nilai">75.0</field>
+    </record>
+
+</odoo>
