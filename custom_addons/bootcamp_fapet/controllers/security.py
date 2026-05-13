@@ -59,11 +59,33 @@ class SecurityController(http.Controller):
                 'access_badges': badges
             })
 
+        # --- DATA MATRIKS SIMULASI UNTUK UI ---
+        matrix_roles = []
+        for g in available_groups:
+            # Simulasi data checkbox berdasarkan nama grup
+            is_it = 'it' in g.name.lower()
+            matrix_roles.append({
+                'id': g.id,
+                'name': g.name,
+                'utama': True,
+                'keuangan': not is_it,
+                'pengadaan': not is_it,
+                'kpi': not is_it,
+                'input_biaya': not is_it,
+                'input_stok': not is_it,
+                'input_kpi': not is_it,
+                'target_kpi': not is_it,
+                'sinkron_pos': True,
+                'hak_akses': is_it,
+                'log_sistem': is_it,
+            })
+
         values = {
             'user': user,
             'user_groups': user_groups,
             'available_groups': available_groups,
             'user_list': user_list,
+            'matrix_roles': matrix_roles,
         }
         
         return request.render('bootcamp_fapet.template_kelola_hak_akses', values)

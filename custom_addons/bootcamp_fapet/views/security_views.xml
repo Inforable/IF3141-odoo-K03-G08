@@ -21,43 +21,59 @@
                     .page-title { font-size: 1.6rem; font-weight: 700; color: #1a1a2e; }
                     .page-subtitle { font-size: 0.875rem; color: #888; margin-top: 4px; }
                     
-                    /* Grid Atas (Form Kiri 1 Bagian, List Kanan 2 Bagian) */
+                    /* Grid Atas */
                     .top-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; margin-bottom: 24px; width: 100%; }
                     
                     /* Panel Card Umum */
-                    .panel-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); align-self: start; }
-                    .panel-title { font-size: 1.1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+                    /* align-self: start; MEMBUAT PANEL TIDAK ADA SPACE KOSONG DI BAWAH JIKA SEBELAHNYA LEBIH PANJANG */
+                    .panel-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); align-self: start; height: fit-content; }
+                    .panel-title { font-size: 1.1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
 
                     /* Form Elements */
                     .form-group { margin-bottom: 20px; }
                     .form-label { display: block; font-size: 0.85rem; color: #555; margin-bottom: 8px; }
                     .form-control { width: 100%; padding: 12px 14px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 0.875rem; color: #333; }
                     .form-control:focus { outline: none; border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
-                    .btn-submit { background: #6d4c41; color: #fff; border: none; border-radius: 8px; padding: 14px 24px; font-size: 0.9rem; font-weight: 600; cursor: pointer; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; }
+                    .btn-submit { background: #6d4c41; color: #fff; border: none; border-radius: 8px; padding: 14px 24px; font-size: 0.9rem; font-weight: 600; cursor: pointer; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
                     .btn-submit:hover { background: #5d4037; }
 
-                    /* Daftar User (Card Kanan) */
-                    .user-list { display: flex; flex-direction: column; gap: 16px; }
-                    .user-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; display: flex; gap: 16px; align-items: flex-start; }
-                    .uc-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+                    /* Daftar User (SCROLLABLE) */
+                    .user-list-container { max-height: 400px; overflow-y: auto; padding-right: 8px; }
+                    /* Custom Scrollbar untuk List User */
+                    .user-list-container::-webkit-scrollbar { width: 6px; }
+                    .user-list-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+                    
+                    .user-list { display: flex; flex-direction: column; gap: 12px; }
+                    .user-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; display: flex; gap: 16px; align-items: flex-start; }
+                    .uc-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; color: #fff; flex-shrink: 0; }
                     .uc-info { flex: 1; }
                     .uc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
-                    .uc-name { font-size: 1rem; font-weight: 700; color: #1a1a2e; }
-                    .uc-username { font-size: 0.8rem; color: #888; }
-                    .uc-role { font-size: 0.8rem; color: #aaa; margin-bottom: 12px; }
-                    .uc-access-label { font-size: 0.75rem; color: #1a1a2e; font-weight: 600; margin-bottom: 8px; }
+                    .uc-name { font-size: 0.95rem; font-weight: 700; color: #1a1a2e; }
+                    .uc-username { font-size: 0.75rem; color: #888; }
+                    .uc-role { font-size: 0.8rem; color: #aaa; margin-bottom: 8px; }
                     .uc-badges { display: flex; flex-wrap: wrap; gap: 6px; }
-                    .access-badge { background: #f3f4f6; color: #4b5563; font-size: 0.7rem; padding: 4px 10px; border-radius: 12px; }
-                    .status-aktif { font-size: 0.7rem; background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+                    .access-badge { background: #f3f4f6; color: #4b5563; font-size: 0.65rem; padding: 4px 8px; border-radius: 12px; }
+                    .status-aktif { font-size: 0.65rem; background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 12px; font-weight: 600; }
 
-                    /* Matriks Table (Bawah) */
-                    .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-                    .matrix-table th { text-align: left; padding: 12px; font-weight: 600; color: #888; border-bottom: 2px solid #e5e7eb; font-size: 0.75rem; letter-spacing: 0.5px; text-transform: uppercase; }
-                    .matrix-table td { padding: 16px 12px; color: #1a1a2e; border-bottom: 1px solid #f3f4f6; }
-                    .matrix-table th:not(:first-child), .matrix-table td:not(:first-child) { text-align: center; }
+                    /* Matriks Table dan Scroll Horizontal */
+                    .matrix-wrapper { width: 100%; overflow-x: auto; padding-bottom: 10px; }
+                    .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 1000px; }
+                    .matrix-table th { text-align: center; padding: 12px 8px; font-weight: 600; color: #888; border-bottom: 2px solid #e5e7eb; font-size: 0.7rem; text-transform: uppercase; }
+                    .matrix-table th:first-child { text-align: left; position: sticky; left: 0; background: #fff; z-index: 2; }
+                    .matrix-table td { padding: 16px 8px; text-align: center; color: #1a1a2e; border-bottom: 1px solid #f3f4f6; }
+                    .matrix-table td:first-child { text-align: left; font-weight: 600; position: sticky; left: 0; background: #fff; z-index: 2; }
                     .matrix-table tr:hover td { background: #fafbff; }
-                    .check-icon { color: #22c55e; font-size: 1.1rem; }
-                    .dash-icon { color: #d1d5db; }
+                    
+                    /* Styling Checkbox */
+                    .matrix-checkbox { width: 18px; height: 18px; cursor: pointer; accent-color: #7c3aed; }
+                    .matrix-checkbox:disabled { cursor: not-allowed; opacity: 0.5; }
+
+                    /* Tombol Edit dan Simpan Matriks */
+                    .btn-action-matrix { padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+                    .btn-edit { background: #e0e7ff; color: #4338ca; }
+                    .btn-edit:hover { background: #c7d2fe; }
+                    .btn-save { background: #10b981; color: #fff; display: none; }
+                    .btn-save:hover { background: #059669; }
                 </style>
             </t>
 
@@ -79,11 +95,10 @@
                     <div class="top-layout">
                         <div class="panel-card">
                             <div class="panel-title">
-                                <i class="fa fa-user-plus" style="color:#6d4c41;"/> Tambah User Baru
+                                <div><i class="fa fa-user-plus" style="color:#6d4c41; margin-right:8px;"/> Tambah User Baru</div>
                             </div>
                             <form action="/bootcamp/hak_akses/submit" method="post">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                
                                 <div class="form-group">
                                     <label class="form-label">Nama Lengkap</label>
                                     <input type="text" name="name" class="form-control" placeholder="Masukkan nama lengkap" required="required"/>
@@ -113,109 +128,130 @@
 
                         <div class="panel-card">
                             <div class="panel-title">Daftar User</div>
-                            <div class="user-list">
-                                <t t-foreach="user_list" t-as="u">
-                                    <div class="user-card">
-                                        <div class="uc-avatar" t-attf-style="background-color: #{'#7c3aed' if u['role_code'] == 'direktur' else '#6d4c41' if u['role_code'] == 'keuangan' else '#8b5cf6' if u['role_code'] == 'operasional' else '#374151'};">
-                                            <t t-esc="u['initial']"/>
-                                        </div>
-                                        <div class="uc-info">
-                                            <div class="uc-header">
-                                                <div>
-                                                    <div class="uc-name"><t t-esc="u['name']"/></div>
-                                                    <div class="uc-username">@<t t-esc="u['login']"/></div>
+                            <div class="user-list-container">
+                                <div class="user-list">
+                                    <t t-foreach="user_list" t-as="u">
+                                        <div class="user-card">
+                                            <div class="uc-avatar" t-attf-style="background-color: #{'#7c3aed' if u['role_code'] == 'direktur' else '#6d4c41' if u['role_code'] == 'keuangan' else '#8b5cf6' if u['role_code'] == 'operasional' else '#374151'};">
+                                                <t t-esc="u['initial']"/>
+                                            </div>
+                                            <div class="uc-info">
+                                                <div class="uc-header">
+                                                    <div>
+                                                        <div class="uc-name"><t t-esc="u['name']"/></div>
+                                                        <div class="uc-username">@<t t-esc="u['login']"/></div>
+                                                    </div>
+                                                    <div class="status-aktif">Aktif</div>
                                                 </div>
-                                                <div class="status-aktif">Aktif <i class="fa fa-shield"/></div>
-                                            </div>
-                                            <div class="uc-role"><t t-esc="u['role_name']"/></div>
-                                            <div class="uc-access-label">Hak Akses:</div>
-                                            <div class="uc-badges">
-                                                <t t-foreach="u['access_badges']" t-as="badge">
-                                                    <span class="access-badge"><t t-esc="badge"/></span>
-                                                </t>
+                                                <div class="uc-role"><t t-esc="u['role_name']"/></div>
+                                                <div class="uc-badges">
+                                                    <t t-foreach="u['access_badges']" t-as="badge">
+                                                        <span class="access-badge"><t t-esc="badge"/></span>
+                                                    </t>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </t>
+                                    </t>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="panel-card" style="margin-bottom: 24px;">
-                        <div class="panel-title">Matriks Hak Akses per Role</div>
-                        <table class="matrix-table">
-                            <thead>
-                                <tr>
-                                    <th>ROLE</th>
-                                    <th>DASHBOARD UTAMA</th>
-                                    <th>KEUANGAN</th>
-                                    <th>PENGADAAN</th>
-                                    <th>KPI</th>
-                                    <th>ADMIN</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Direktur/Komisaris</td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Kepala Divisi Keuangan</td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Manajer Operasional</td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Kepala Divisi</td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Kepala Produksi &amp; Processing</td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                </tr>
-                                <tr>
-                                    <td>IT Staff</td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                    <td><span class="dash-icon">-</span></td>
-                                    <td><i class="fa fa-check check-icon"/></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="panel-title">
+                            <div>Matriks Hak Akses per Role</div>
+                            
+                            <div>
+                                <button type="button" id="btn-edit-matrix" class="btn-action-matrix btn-edit" onclick="enableMatrixEditing()">
+                                    <i class="fa fa-pencil"/> Ubah Hak Akses
+                                </button>
+                                <button type="button" id="btn-save-matrix" class="btn-action-matrix btn-save" onclick="saveMatrixEditing()">
+                                    <i class="fa fa-save"/> Simpan
+                                </button>
+                            </div>
+                        </div>
+
+                        <form id="form-matrix" action="#" method="post">
+                            <div class="matrix-wrapper">
+                                <table class="matrix-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ROLE</th>
+                                            <th>Utama</th>
+                                            <th>Keuangan</th>
+                                            <th>Pengadaan</th>
+                                            <th>Db KPI</th>
+                                            <th>Inp Biaya</th>
+                                            <th>Inp Stok</th>
+                                            <th>Inp KPI</th>
+                                            <th>Target KPI</th>
+                                            <th>Sync POS</th>
+                                            <th>Kelola Hak</th>
+                                            <th>Log Sistem</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="matrix_roles" t-as="m">
+                                            <tr>
+                                                <td t-esc="m['name']"/>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['utama']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['keuangan']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['pengadaan']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['kpi']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['input_biaya']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['input_stok']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['input_kpi']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['target_kpi']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['sinkron_pos']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['hak_akses']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['log_sistem']"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
                     </div>
 
                 </div>
             </div>
 
             <script>
+                // 1. Set Tanggal Hari Ini
                 var d = new Date();
                 var days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
                 var months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
                 var el = document.getElementById('current-date');
                 if (el) el.textContent = days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+
+                // 2. Fungsi Interaktif Matriks UI
+                function enableMatrixEditing() {
+                    // Cari semua checkbox dan enable
+                    var checkboxes = document.querySelectorAll('.matrix-checkbox');
+                    checkboxes.forEach(function(cb) {
+                        cb.removeAttribute('disabled');
+                    });
+
+                    // Sembunyikan tombol Edit, Munculkan tombol Simpan
+                    document.getElementById('btn-edit-matrix').style.display = 'none';
+                    document.getElementById('btn-save-matrix').style.display = 'flex';
+                }
+
+                function saveMatrixEditing() {
+                    // Di sini nantinya kita letakkan: document.getElementById('form-matrix').submit();
+                    // Untuk saat ini (fokus UI), kita kembalikan ke state awal (Disabled).
+                    var checkboxes = document.querySelectorAll('.matrix-checkbox');
+                    checkboxes.forEach(function(cb) {
+                        cb.setAttribute('disabled', 'disabled');
+                    });
+
+                    // Sembunyikan tombol Simpan, Munculkan tombol Edit
+                    document.getElementById('btn-save-matrix').style.display = 'none';
+                    document.getElementById('btn-edit-matrix').style.display = 'flex';
+                    
+                    // Optional: Beri feedback visual
+                    alert('Visual/UI Updated: Hak Akses disimpan! (Backend belum terhubung)');
+                }
             </script>
         </t>
     </template>
