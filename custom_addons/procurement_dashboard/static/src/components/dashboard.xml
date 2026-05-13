@@ -1,0 +1,106 @@
+<templates xml:space="preserve">
+    <t t-name="procurement_dashboard.MainDashboard">
+        <div class="o_procurement_dashboard p-4 bg-light" style="height: 100vh; overflow-y: auto;">
+            <div class="mb-4">
+                <h2 class="fw-bold">Dashboard Operasional Pengadaan</h2>
+                <p class="text-muted">Pemantauan stok dan visualisasi data pengadaan</p>
+            </div>
+
+            <div class="row g-3 mb-4" t-if="!state.loading">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm p-4 h-100">
+                        <h5 class="card-title fw-bold mb-3">Jumlah Bahan per Kategori</h5>
+                        <canvas id="categoryChart" style="height: 320px;"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="row g-3 h-100">
+                        <div class="col-6">
+                            <div class="card p-3 shadow-sm border-0 h-100">
+                                <small class="text-muted">Total Item</small>
+                                <h2 class="fw-bold" t-out="state.data.cards.total"/>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card p-3 shadow-sm border-0 bg-success text-white h-100">
+                                <small>Stok Normal</small>
+                                <h2 class="fw-bold" t-out="state.data.cards.normal"/>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card p-3 shadow-sm border-0 bg-warning h-100">
+                                <small>Perlu Perhatian</small>
+                                <h2 class="fw-bold" t-out="state.data.cards.perhatian"/>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card p-3 shadow-sm border-0 bg-danger text-white h-100">
+                                <small>Stok Kritis</small>
+                                <h2 class="fw-bold" t-out="state.data.cards.kritis"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm p-3">
+                <div class="mb-3">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Cari Bahan Baku</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   placeholder="Ketik nama atau kategori bahan baku..."
+                                   t-att-value="state.searchQuery"
+                                   t-on-input="onSearchChange"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Filter Status</label>
+                            <div class="btn-group w-100" role="group">
+                                <t t-foreach="['All', 'Normal', 'Perhatian', 'Kritis']" t-as="status" t-key="status">
+                                    <button type="button" 
+                                            t-attf-class="btn #{state.selectedStatus === status ? 'btn-primary' : 'btn-outline-primary'}"
+                                            t-on-click="() => this.onStatusFilterChange(status)">
+                                        <t t-out="status"/>
+                                    </button>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table align-middle">
+                    <thead>
+                        <tr class="text-muted">
+                            <th>NAMA BAHAN</th>
+                            <th>KATEGORI</th>
+                            <th>STOK</th>
+                            <th>MIN. STOK</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="state.filteredMaterials" t-as="item" t-key="item.name">
+                            <tr>
+                                <td t-out="item.name"/>
+                                <td t-out="item.kategori"/>
+                                <td t-out="item.stok" class="fw-bold"/>
+                                <td t-out="item.min"/>
+                                <td>
+                                    <span t-attf-class="badge rounded-pill #{item.status == 'Normal' ? 'bg-success-light text-success' : (item.status == 'Kritis' ? 'bg-danger-light text-danger' : 'bg-warning-light text-warning')}">
+                                        <t t-out="item.status"/>
+                                    </span>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                <t t-if="state.filteredMaterials.length === 0">
+                    <div class="text-center text-muted py-4">
+                        <p>Tidak ada data yang sesuai dengan filter Anda</p>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
