@@ -209,40 +209,33 @@
                             </div>
                         </div>
 
-                        <form id="form-matrix" action="#" method="post">
+                        <form id="form-matrix" action="/bootcamp/hak_akses/matrix/submit" method="post">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="matrix-wrapper">
                                 <table class="matrix-table">
                                     <thead>
                                         <tr>
                                             <th>ROLE</th>
-                                            <th>Utama</th>
-                                            <th>Keuangan</th>
-                                            <th>Pengadaan</th>
-                                            <th>Db KPI</th>
-                                            <th>Inp Biaya</th>
-                                            <th>Inp Stok</th>
-                                            <th>Inp KPI</th>
-                                            <th>Target KPI</th>
-                                            <th>Sync POS</th>
-                                            <th>Kelola Hak</th>
-                                            <th>Log Sistem</th>
+                                            <th>Utama</th><th>Keuangan</th><th>Pengadaan</th><th>Db KPI</th>
+                                            <th>Inp Biaya</th><th>Inp Stok</th><th>Inp KPI</th><th>Target KPI</th>
+                                            <th>Sync POS</th><th>Kelola Hak</th><th>Log Sistem</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <t t-foreach="matrix_roles" t-as="m">
                                             <tr>
                                                 <td t-esc="m['name']"/>
-                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['utama']"/></td>
-                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['keuangan']"/></td>
-                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['pengadaan']"/></td>
-                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['kpi']"/></td>
-                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['input_biaya']"/></td>
-                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['input_stok']"/></td>
-                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['input_kpi']"/></td>
-                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['target_kpi']"/></td>
-                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['sinkron_pos']"/></td>
-                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['hak_akses']"/></td>
-                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-checked="m['log_sistem']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-name="'access_' + str(m['id']) + '_utama'" t-att-checked="m['utama']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-name="'access_' + str(m['id']) + '_keuangan'" t-att-checked="m['keuangan']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-name="'access_' + str(m['id']) + '_pengadaan'" t-att-checked="m['pengadaan']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-name="'access_' + str(m['id']) + '_kpi'" t-att-checked="m['kpi']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-name="'access_' + str(m['id']) + '_input_biaya'" t-att-checked="m['input_biaya']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-name="'access_' + str(m['id']) + '_input_stok'" t-att-checked="m['input_stok']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-name="'access_' + str(m['id']) + '_input_kpi'" t-att-checked="m['input_kpi']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-name="'access_' + str(m['id']) + '_target_kpi'" t-att-checked="m['target_kpi']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-name="'access_' + str(m['id']) + '_sinkron_pos'" t-att-checked="m['sinkron_pos']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-name="'access_' + str(m['id']) + '_hak_akses'" t-att-checked="m['hak_akses']"/></td>
+                                                <td><input type="checkbox" class="matrix-checkbox" disabled="disabled" t-att-name="'access_' + str(m['id']) + '_log_sistem'" t-att-checked="m['log_sistem']"/></td>
                                             </tr>
                                         </t>
                                     </tbody>
@@ -333,6 +326,11 @@
                         form.action = '/bootcamp/hak_akses/delete/' + selectedUserId;
                         form.submit();
                     }
+                }
+
+                function saveMatrixEditing() {
+                    // Langsung submit form ke backend
+                    document.getElementById('form-matrix').submit();
                 }
             </script>
         </t>

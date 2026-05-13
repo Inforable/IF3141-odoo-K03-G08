@@ -62,17 +62,44 @@ MOCK_KEUANGAN = {
 
 class DashboardController(http.Controller):
 
-    @http.route('/bootcamp/dashboard', type='http', auth='user', website=False)
-    def dashboard_utama(self, **kwargs):
-        dashboard_data = request.env['bootcamp.dashboard'].get_dashboard_data()
-        user = request.env.user
-        user_groups = {
+    def _get_permissions(self, user):
+        """Helper untuk sinkronisasi izin matriks dengan kompatibilitas view lama"""
+        groups = user.sudo().groups_id
+        is_it_staff = user.has_group('bootcamp_fapet.group_staff_it')
+        
+        return {
+            # --- KUNCI MATRIKS BARU (Untuk Sidebar) ---
+            'utama': True if is_it_staff else any(getattr(g, 'x_bootcamp_utama', False) for g in groups),
+            'keuangan': any(getattr(g, 'x_bootcamp_keuangan', False) for g in groups),
+            'pengadaan': any(getattr(g, 'x_bootcamp_pengadaan', False) for g in groups),
+            'kpi': any(getattr(g, 'x_bootcamp_kpi', False) for g in groups),
+            'input_biaya': any(getattr(g, 'x_bootcamp_input_biaya', False) for g in groups),
+            'input_stok': any(getattr(g, 'x_bootcamp_input_stok', False) for g in groups),
+            'input_kpi': any(getattr(g, 'x_bootcamp_input_kpi', False) for g in groups),
+            'target_kpi': any(getattr(g, 'x_bootcamp_target_kpi', False) for g in groups),
+            'sinkron_pos': any(getattr(g, 'x_bootcamp_sinkron_pos', False) for g in groups),
+            'hak_akses': True if is_it_staff else any(getattr(g, 'x_bootcamp_hak_akses', False) for g in groups),
+            'log_sistem': True if is_it_staff else any(getattr(g, 'x_bootcamp_log_sistem', False) for g in groups),
+            
+            # --- KUNCI ROLE LAMA ---
             'is_direktur': user.has_group('bootcamp_fapet.group_direktur'),
             'is_kepala_keuangan': user.has_group('bootcamp_fapet.group_kepala_keuangan'),
             'is_manajer_operasional': user.has_group('bootcamp_fapet.group_manajer_operasional'),
             'is_kepala_prosesing': user.has_group('bootcamp_fapet.group_kepala_prosesing'),
-            'is_staff_it': user.has_group('bootcamp_fapet.group_staff_it'),
+            'is_staff_it': is_it_staff,
         }
+
+    @http.route('/bootcamp/dashboard', type='http', auth='user', website=False)
+    def dashboard_utama(self, **kwargs):
+        dashboard_data = request.env['bootcamp.dashboard'].sudo().get_dashboard_data()
+        user = request.env.user
+        
+        # Panggil izin berdasarkan matriks
+        user_groups = self._get_permissions(user)
+
+        # Keamanan Akses
+        if not user_groups.get('utama'):
+            return request.redirect('/web')
 
         values = {
             'dashboard_data': dashboard_data,
@@ -85,17 +112,11 @@ class DashboardController(http.Controller):
     @http.route('/bootcamp/dashboard/keuangan', type='http', auth='user', website=False)
     def dashboard_keuangan(self, periode='bulan', **kwargs):
         user = request.env.user
-        user_groups = {
-            'is_direktur': user.has_group('bootcamp_fapet.group_direktur'),
-            'is_kepala_keuangan': user.has_group('bootcamp_fapet.group_kepala_keuangan'),
-            'is_manajer_operasional': user.has_group('bootcamp_fapet.group_manajer_operasional'),
-            'is_kepala_prosesing': user.has_group('bootcamp_fapet.group_kepala_prosesing'),
-            'is_staff_it': user.has_group('bootcamp_fapet.group_staff_it'),
-        }
+        user_groups = self._get_permissions(user)
 
-        # ACCESS CONTROL skrg grant access utk semua dulu
-        # if not (user_groups['is_direktur'] or user_groups['is_kepala_keuangan']):
-        #     return request.redirect('/bootcamp/dashboard')
+        # ACCESS CONTROL berdasar matriks
+        if not user_groups.get('keuangan'):
+            return request.redirect('/bootcamp/dashboard')
 
         if periode not in ('hari', 'bulan', 'tahun'):
             periode = 'bulan'

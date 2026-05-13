@@ -48,65 +48,67 @@
             </div>
 
             <nav class="sidebar-nav">
-                <a href="/bootcamp/dashboard" t-att-class="'nav-item ' + ('active' if active_menu == 'utama' else '')">
-                    <i class="fa fa-th-large"/> Dashboard Utama
-                </a>
+                <t t-if="user_groups.get('utama')">
+                    <a href="/bootcamp/dashboard" t-att-class="'nav-item ' + ('active' if active_menu == 'utama' else '')">
+                        <i class="fa fa-th-large"/> Dashboard Utama
+                    </a>
+                </t>
                 
-                <t t-if="user_groups['is_direktur'] or user_groups['is_kepala_keuangan']">
+                <t t-if="user_groups.get('keuangan')">
                     <a href="/bootcamp/dashboard/keuangan" t-att-class="'nav-item ' + ('active' if active_menu == 'keuangan' else '')">
                         <i class="fa fa-dollar"/> Dashboard Keuangan
                     </a>
                 </t>
                 
-                <t t-if="user_groups['is_direktur'] or user_groups['is_kepala_prosesing']">
+                <t t-if="user_groups.get('pengadaan')">
                     <a href="#" t-att-class="'nav-item ' + ('active' if active_menu == 'pengadaan' else '')">
                         <i class="fa fa-cube"/> Dashboard Pengadaan
                     </a>
                 </t>
                 
-                <t t-if="user_groups['is_direktur'] or user_groups['is_manajer_operasional'] or user_groups['is_kepala_keuangan'] or user_groups['is_kepala_prosesing']">
+                <t t-if="user_groups.get('kpi')">
                     <a href="#" t-att-class="'nav-item ' + ('active' if active_menu == 'kpi' else '')">
                         <i class="fa fa-line-chart"/> Dashboard KPI
                     </a>
                 </t>
                 
-                <t t-if="user_groups['is_direktur'] or user_groups['is_kepala_keuangan']">
+                <t t-if="user_groups.get('input_biaya')">
                     <a href="#" class="nav-item">
                         <i class="fa fa-file-text"/> Input Biaya Operasional
                     </a>
                 </t>
                 
-                <t t-if="user_groups['is_direktur'] or user_groups['is_kepala_prosesing']">
+                <t t-if="user_groups.get('input_stok')">
                     <a href="#" class="nav-item">
                         <i class="fa fa-archive"/> Input Stok Bahan Baku
                     </a>
                 </t>
                 
-                <t t-if="user_groups['is_direktur'] or user_groups['is_manajer_operasional']">
+                <t t-if="user_groups.get('input_kpi')">
                     <a href="/bootcamp/kpi/aktual" t-att-class="'nav-item ' + ('active' if active_menu == 'input_kpi' else '')">
                         <i class="fa fa-pencil-square-o"/> Input Ketercapaian KPI
                     </a>
                 </t>
 
-                <t t-if="user_groups['is_direktur'] or user_groups['is_manajer_operasional']">
+                <t t-if="user_groups.get('target_kpi')">
                     <a href="#" class="nav-item">
                         <i class="fa fa-bullseye"/> Target KPI
                     </a>
                 </t>
                 
-                <t t-if="user_groups['is_direktur'] or user_groups['is_staff_it']">
+                <t t-if="user_groups.get('sinkron_pos')">
                     <a href="#" class="nav-item">
                         <i class="fa fa-refresh"/> Sinkronisasi POS
                     </a>
                 </t>
                 
-                <t t-if="user_groups['is_staff_it']">
+                <t t-if="user_groups.get('hak_akses')">
                     <a href="/bootcamp/hak_akses" t-att-class="'nav-item ' + ('active' if active_menu == 'hak_akses' else '')">
                         <i class="fa fa-users"/> Kelola Hak Akses
                     </a>
                 </t>
                 
-                <t t-if="user_groups['is_direktur'] or user_groups['is_staff_it']">
+                <t t-if="user_groups.get('log_sistem')">
                     <a href="#" class="nav-item">
                         <i class="fa fa-history"/> Log Sistem
                     </a>
@@ -116,7 +118,7 @@
             <div class="sidebar-footer">
                 <div class="user-info">
                     <div class="user-avatar">
-                        <t t-esc="user.name[0].upper()"/>
+                        <t t-esc="user.name[0].upper() if user.name else 'U'"/>
                     </div>
                     <div>
                         <div class="user-name" t-esc="user.name"/>
