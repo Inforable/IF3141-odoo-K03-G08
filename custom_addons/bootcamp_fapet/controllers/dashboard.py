@@ -98,6 +98,7 @@ class DashboardController(http.Controller):
             'dashboard_data': dashboard_data,
             'user': user,
             'user_groups': user_groups,
+            'active_menu': 'utama',
         }
 
         return request.render('bootcamp_fapet.template_dashboard_utama', values)
@@ -117,6 +118,7 @@ class DashboardController(http.Controller):
         values = {
             'user': user,
             'user_groups': user_groups,
+            'active_menu': 'keuangan',
             'periode': periode,
             'total_pendapatan': data['total_pendapatan'],
             'total_biaya': data['total_biaya'],

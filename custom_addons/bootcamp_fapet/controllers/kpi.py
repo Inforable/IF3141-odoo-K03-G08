@@ -45,6 +45,7 @@ class KPIController(http.Controller):
             'kpi_aktual_list': kpi_aktual_list,
             'user_groups': user_groups,
             'user': user,
+            'active_menu': 'input_kpi',
         }
         
         return request.render('bootcamp_fapet.template_kpi_aktual', values)

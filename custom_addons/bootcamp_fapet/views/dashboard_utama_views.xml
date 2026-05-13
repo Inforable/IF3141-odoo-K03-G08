@@ -148,9 +148,7 @@
             <div style="display:flex; min-height:100vh;">
 
                 <!-- ═══════════ SIDEBAR ═══════════ -->
-                <t t-call="bootcamp_fapet.component_sidebar">
-                    <t t-set="active_menu" t-value="'utama'"/>
-                </t>
+                <t t-call="bootcamp_fapet.component_sidebar"/>
 
                 <!-- ═══════════ MAIN CONTENT ═══════════ -->
                 <div class="main-content">

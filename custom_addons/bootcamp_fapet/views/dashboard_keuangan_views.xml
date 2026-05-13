@@ -10,7 +10,7 @@
     <template id="template_dashboard_keuangan" name="Dashboard Keuangan Bootcamp Fapet">
         <t t-call="web.layout">
             <t t-set="head">
-                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"/>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
                 <style>
                     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -163,9 +163,7 @@
             <div style="display:flex; min-height:100vh;">
 
                 <!-- ═══════════ SIDEBAR ═══════════ -->
-                <t t-call="bootcamp_fapet.component_sidebar">
-                    <t t-set="active_menu" t-value="'utama'"/>
-                </t>
+                <t t-call="bootcamp_fapet.component_sidebar"/>
 
                 <!-- ═══════════ MAIN CONTENT ═══════════ -->
                 <div class="main-content">

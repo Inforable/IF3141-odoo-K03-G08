@@ -7,8 +7,6 @@ class ProcurementDashboard(models.Model):
 
     @api.model
     def get_dashboard_data(self, domain=[]):
-        
-        # Ambil data dari database
         bahan_baku_obj = self.env['bahan.baku']
         materials_db = bahan_baku_obj.search([], order='name')
         
@@ -52,8 +50,6 @@ class ProcurementDashboard(models.Model):
 
     @api.model
     def update_stock_with_history(self, material_id, quantity, transaction_type, notes=''):
-        # Update stok DAN buat riwayat dalam 1 transaksi
-
         try:
             material_obj = self.env['bahan.baku']
             material = material_obj.browse(material_id)
@@ -91,11 +87,9 @@ class ProcurementDashboard(models.Model):
 
     @api.model
     def get_stock_input_transactions(self):
-        # Getter riwayat transaksi
-
         try:
             history_obj = self.env['stock.input.history']
-            recent_history = history_obj.search([], limit=10, order='date desc') # 10 transaksi terakhir
+            recent_history = history_obj.search([], limit=10, order='date desc')
             
             transactions = []
             for record in recent_history:

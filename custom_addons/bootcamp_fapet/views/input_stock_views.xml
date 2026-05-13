@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_stock_input_url" model="ir.actions.act_url">
+            <field name="name">Input Stok Bahan Baku</field>
+            <field name="url">/bootcamp/stok-bahan-baku</field>
+            <field name="target">self</field>
+        </record>
+
+        <template id="template_input_stok" name="Input Stok Bahan Baku">
+            <t t-call="web.layout">
+                <t t-set="head">
+                    <style>
+                        * { box-sizing: border-box; margin: 0; padding: 0; }
+                        body {
+                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                            background: #f5f5f5; display: flex; min-height: 100vh;
+                        }
+                        .main-content { margin-left: 240px; flex: 1; padding: 32px; }
+                        .topbar { margin-bottom: 28px; }
+                        .page-title { font-size: 1.6rem; font-weight: 700; color: #1a1a2e; }
+                        .page-subtitle { font-size: 0.875rem; color: #888; margin-top: 4px; }
+                        
+                        .content-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 24px; }
+                        .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: #1a1a2e; border-bottom: 1px solid #eee; padding-bottom: 12px; }
+                        
+                        .form-group { margin-bottom: 16px; }
+                        .form-label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: #444; }
+                        .form-control { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem; }
+                        .btn-submit { background: #7c3aed; color: #fff; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+                        .btn-submit:hover { background: #6d28d9; }
+                        
+                        .history-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+                        .history-table th, .history-table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+                        .history-table th { background: #fafafa; font-weight: 600; color: #555; }
+                        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+                        .badge-in { background: #e6f4ea; color: #1e8e3e; }
+                        .badge-out { background: #fce8e6; color: #d93025; }
+                    </style>
+                </t>
+
+                <div style="display:flex; min-height:100vh;">
+                    <t t-call="bootcamp_fapet.component_sidebar"/>
+                    <div class="main-content">
+                        <div class="topbar">
+                            <div class="page-title">Input Stok Bahan Baku</div>
+                            <div class="page-subtitle">Tambah mutasi stok bahan baku (In/Out)</div>
+                        </div>
+
+                        <div class="row" style="display:flex; gap:24px;">
+                            <div class="col-md-5" style="flex: 0 0 35%;">
+                                <div class="content-card">
+                                    <div class="card-title">Form Input Mutasi</div>
+                                    <form action="/bootcamp/stok-bahan-baku/submit" method="post">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        
+                                        <div class="form-group">
+                                            <label class="form-label">Bahan Baku</label>
+                                            <select name="material_id" class="form-control" required="required">
+                                                <option value="">-- Pilih Bahan Baku --</option>
+                                                <t t-foreach="bahan_baku" t-as="m">
+                                                    <option t-att-value="m.id"><t t-esc="m.name"/> (Stok: <t t-esc="m.stok"/> <t t-esc="m.uom"/>)</option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="form-label">Jenis Mutasi</label>
+                                            <select name="transaction_type" class="form-control" required="required">
+                                                <option value="in">Barang Masuk (In)</option>
+                                                <option value="out">Barang Keluar (Out)</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="form-label">Kuantitas</label>
+                                            <input type="number" name="quantity" class="form-control" placeholder="0" min="0.01" step="0.01" required="required"/>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="form-label">Keterangan / Referensi (Opsional)</label>
+                                            <input type="text" name="notes" class="form-control" placeholder="Contoh: Pembelian dari Supplier X"/>
+                                        </div>
+                                        
+                                        <div style="margin-top: 24px;">
+                                            <button type="submit" class="btn-submit">Simpan Mutasi</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-7" style="flex: 1;">
+                                <div class="content-card">
+                                    <div class="card-title">Riwayat Mutasi Terakhir</div>
+                                    <table class="history-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tanggal</th>
+                                                <th>Bahan Baku</th>
+                                                <th>Mutasi</th>
+                                                <th>Kuantitas</th>
+                                                <th>Keterangan</th>
+                                                <th>Oleh</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="riwayat" t-as="r">
+                                                <tr>
+                                                    <td><t t-esc="r.date.strftime('%d/%m/%Y %H:%M')"/></td>
+                                                    <td><t t-esc="r.material_id.name"/></td>
+                                                    <td>
+                                                        <span t-att-class="'badge ' + ('badge-in' if r.transaction_type == 'in' else 'badge-out')">
+                                                            <t t-esc="r.transaction_type.upper()"/>
+                                                        </span>
+                                                    </td>
+                                                    <td><t t-esc="r.quantity"/></td>
+                                                    <td><t t-esc="r.notes or '-'"/></td>
+                                                    <td><t t-esc="r.user_id.name"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <record id="action_stock_input_form" model="ir.actions.act_window">
+            <field name="name">Input Stok Bahan Baku</field>
+            <field name="res_model">stock.input.material</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+
+        <record id="view_stock_input_form" model="ir.ui.view">
+            <field name="name">stock.input.material.form</field>
+            <field name="model">stock.input.material</field>
+            <field name="arch" type="xml">
+                <form string="Input Stok Bahan Baku">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date" widget="datetime"/>
+                                <field name="material_id" options="{'no_open': False, 'no_create': False}"/>
+                                <field name="transaction_type"/>
+                            </group>
+                            <group>
+                                <field name="current_stock" readonly="1" widget="integer"/>
+                                <field name="quantity" widget="integer"/>
+                                <field name="unit" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="stock_after" readonly="1" widget="integer"/>
+                            <field name="created_by" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="notes" placeholder="Tambahkan catatan perubahan stok..."/>
+                        </group>
+                        <footer>
+                            <button name="action_confirm" string="Simpan Perubahan Stok" type="object" class="oe_highlight"/>
+                            <button string="Batal" class="oe_link" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_stock_input_tree" model="ir.ui.view">
+            <field name="name">stock.input.material.tree</field>
+            <field name="model">stock.input.material</field>
+            <field name="arch" type="xml">
+                <tree string="Riwayat Input Stok" create="false" delete="false">
+                    <field name="date"/>
+                    <field name="material_id"/>
+                    <field name="transaction_type"/>
+                    <field name="quantity"/>
+                    <field name="current_stock"/>
+                    <field name="stock_after"/>
+                    <field name="created_by"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_stock_input_history_tree" model="ir.ui.view">
+            <field name="name">stock.input.history.tree</field>
+            <field name="model">stock.input.history</field>
+            <field name="arch" type="xml">
+                <tree string="Riwayat Lengkap Input Stok" create="false" delete="false">
+                    <field name="date"/>
+                    <field name="material_name"/>
+                    <field name="transaction_type"/>
+                    <field name="quantity"/>
+                    <field name="unit"/>
+                    <field name="stock_before"/>
+                    <field name="stock_after"/>
+                    <field name="created_by"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_stock_input_history" model="ir.actions.act_window">
+            <field name="name">Riwayat Input Stok</field>
+            <field name="res_model">stock.input.material</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

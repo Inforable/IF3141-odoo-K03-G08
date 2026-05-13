@@ -57,6 +57,7 @@ class BiayaOperasionalController(http.Controller):
         values = {
             'user': user,
             'user_groups': user_groups,
+            'active_menu': 'input_biaya',
             'biaya_list': biaya_list,
             'jenis_label': JENIS_BIAYA_LABEL,
             'total_bulan': total_bulan,

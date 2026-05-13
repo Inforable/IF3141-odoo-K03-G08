@@ -11,3 +11,10 @@ access_pos_transaction_keuangan,pos.transaction.keuangan,model_bootcamp_pos_tran
 access_pos_transaction_direktur,pos.transaction.direktur,model_bootcamp_pos_transaction,bootcamp_fapet.group_direktur,1,0,0,0
 access_pos_sync_log_it,pos.sync.log.it,model_bootcamp_pos_sync_log,bootcamp_fapet.group_staff_it,1,1,1,1
 access_pos_sync_log_direktur,pos.sync.log.direktur,model_bootcamp_pos_sync_log,bootcamp_fapet.group_direktur,1,0,0,0
+access_bahan_baku_prosesing,bahan.baku.prosesing,model_bahan_baku,bootcamp_fapet.group_kepala_prosesing,1,1,1,0
+access_bahan_baku_direktur,bahan.baku.direktur,model_bahan_baku,bootcamp_fapet.group_direktur,1,1,1,1
+access_stock_input_material_prosesing,stock.input.material.prosesing,model_stock_input_material,bootcamp_fapet.group_kepala_prosesing,1,1,1,0
+access_stock_input_material_direktur,stock.input.material.direktur,model_stock_input_material,bootcamp_fapet.group_direktur,1,1,1,1
+access_stock_input_history_prosesing,stock.input.history.prosesing,model_stock_input_history,bootcamp_fapet.group_kepala_prosesing,1,0,1,0
+access_stock_input_history_direktur,stock.input.history.direktur,model_stock_input_history,bootcamp_fapet.group_direktur,1,1,1,1
+access_procurement_dashboard_all,procurement.dashboard.all,model_procurement_dashboard,,1,0,0,0

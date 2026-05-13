@@ -88,6 +88,7 @@ class SecurityController(http.Controller):
         return request.render('bootcamp_fapet.template_kelola_hak_akses', {
             'user': user,
             'user_groups': self._get_permissions(user),
+            'active_menu': 'hak_akses',
             'available_groups': available_groups,
             'user_list': user_list,
             'matrix_roles': matrix_roles,

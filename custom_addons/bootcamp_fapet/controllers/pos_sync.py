@@ -51,6 +51,7 @@ class PosSyncController(http.Controller):
         values = {
             'user': request.env.user,
             'user_groups': self._user_groups(),
+            'active_menu': 'pos_sync',
             'logs': logs,
             'last_success': last_success,
             'total_transaksi': total_transaksi,

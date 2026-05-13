@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_procurement_dashboard_url" model="ir.actions.act_url">
+        <field name="name">Dashboard Operasional Pengadaan</field>
+        <field name="url">/bootcamp/pengadaan</field>
+        <field name="target">self</field>
+    </record>
+
+    <template id="template_dashboard_pengadaan" name="Dashboard Pengadaan Bootcamp Fapet">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+                <style>
+                    * { box-sizing: border-box; margin: 0; padding: 0; }
+                    body {
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                        background: #f5f5f5; display: flex; min-height: 100vh;
+                    }
+                    .main-content { margin-left: 240px; flex: 1; padding: 32px; }
+                    .topbar { margin-bottom: 28px; }
+                    .page-title { font-size: 1.6rem; font-weight: 700; color: #1a1a2e; }
+                    .page-subtitle { font-size: 0.875rem; color: #888; margin-top: 4px; }
+                    
+                    /* Summary Cards */
+                    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+                    .summary-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+                    .summary-title { font-size: 0.85rem; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
+                    .summary-value { font-size: 1.8rem; font-weight: 700; color: #1a1a2e; }
+
+                    /* Table */
+                    .table-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+                    .table-card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: #1a1a2e; }
+                    .materials-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+                    .materials-table th, .materials-table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+                    .materials-table th { background: #fafafa; font-weight: 600; color: #555; }
+                    
+                    /* Status Badges */
+                    .badge {
+                        padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;
+                    }
+                    .badge-normal { background: #e6f4ea; color: #1e8e3e; }
+                    .badge-perhatian { background: #fef7e0; color: #f29900; }
+                    .badge-kritis { background: #fce8e6; color: #d93025; }
+                </style>
+            </t>
+
+            <div style="display:flex; min-height:100vh;">
+                <t t-call="bootcamp_fapet.component_sidebar"/>
+
+                <div class="main-content">
+                    <div class="topbar">
+                        <div class="page-title">Dashboard Pengadaan</div>
+                        <div class="page-subtitle">Pemantauan stok bahan baku</div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px;">
+                        <div class="table-card" style="margin-bottom:0;">
+                            <div class="table-card-title">Jumlah Bahan per Kategori</div>
+                            <div style="height: 320px; width:100%; position:relative;">
+                                <canvas id="categoryChart"
+                                    t-att-data-labels="chart_labels"
+                                    t-att-data-values="chart_values"></canvas>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="summary-card text-center" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                                <div class="summary-title">Total Item</div>
+                                <div class="summary-value"><t t-esc="total"/></div>
+                            </div>
+                            <div class="summary-card text-center" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                                <div class="summary-title" style="color: #1e8e3e;">Stok Normal</div>
+                                <div class="summary-value" style="color: #1e8e3e;"><t t-esc="normal"/></div>
+                            </div>
+                            <div class="summary-card text-center" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                                <div class="summary-title" style="color: #f29900;">Perlu Perhatian</div>
+                                <div class="summary-value" style="color: #f29900;"><t t-esc="perhatian"/></div>
+                            </div>
+                            <div class="summary-card text-center" style="display:flex; flex-direction:column; justify-content:center; align-items:center; background:#d93025; color:#fff;">
+                                <div class="summary-title" style="color: rgba(255,255,255,0.8);">Stok Kritis</div>
+                                <div class="summary-value" style="color: #fff;"><t t-esc="kritis"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-card-title">Daftar Bahan Baku</div>
+                        <table class="materials-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama Bahan</th>
+                                    <th>Kategori</th>
+                                    <th>Stok Minimum</th>
+                                    <th>Stok Saat Ini</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="materials" t-as="mat">
+                                    <tr>
+                                        <td><t t-esc="mat['name']"/></td>
+                                        <td><t t-esc="mat['kategori']"/></td>
+                                        <td><t t-esc="mat['min']"/></td>
+                                        <td><t t-esc="mat['stok']"/></td>
+                                        <td>
+                                            <span t-att-class="'badge ' + ('badge-normal' if mat['status'] == 'Normal' else 'badge-perhatian' if mat['status'] == 'Perhatian' else 'badge-kritis')">
+                                                <t t-esc="mat['status']"/>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                setTimeout(function() {
+                    var ctx = document.getElementById('categoryChart');
+                    if (ctx &amp;&amp; typeof Chart !== 'undefined') {
+                        try {
+                            var chartLabels = JSON.parse(ctx.dataset.labels || '[]');
+                            var chartValues = JSON.parse(ctx.dataset.values || '[]');
+
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: chartLabels,
+                                    datasets: [{
+                                        label: 'Jumlah Item per Kategori',
+                                        data: chartValues,
+                                        backgroundColor: '#7c3aed',
+                                        borderRadius: 6
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: { legend: { display: false } },
+                                    scales: {
+                                        y: { beginAtZero: true, ticks: { precision: 0 } },
+                                        x: { grid: { display: false } }
+                                    }
+                                }
+                            });
+                        } catch(e) {
+                            console.error("Gagal render chart pengadaan: ", e);
+                        }
+                    }
+                }, 100);
+            </script>
+        </t>
+    </template>
+</odoo>

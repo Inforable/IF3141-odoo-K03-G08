@@ -141,9 +141,7 @@
 
             <div style="display:flex; min-height:100vh; width:100%;">
 
-                <t t-call="bootcamp_fapet.component_sidebar">
-                    <t t-set="active_menu" t-value="'pos_sync'"/>
-                </t>
+                <t t-call="bootcamp_fapet.component_sidebar"/>
 
                 <div class="main-content">
                     <div class="topbar">
