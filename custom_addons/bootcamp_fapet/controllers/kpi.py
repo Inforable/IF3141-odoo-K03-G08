@@ -10,7 +10,6 @@ class KPIController(http.Controller):
         is_it_staff = user.has_group('bootcamp_fapet.group_staff_it')
         
         return {
-            # --- KUNCI MATRIKS BARU (Untuk Sidebar) ---
             'utama': True if is_it_staff else any(getattr(g, 'x_bootcamp_utama', False) for g in groups),
             'keuangan': any(getattr(g, 'x_bootcamp_keuangan', False) for g in groups),
             'pengadaan': any(getattr(g, 'x_bootcamp_pengadaan', False) for g in groups),
@@ -22,8 +21,6 @@ class KPIController(http.Controller):
             'sinkron_pos': any(getattr(g, 'x_bootcamp_sinkron_pos', False) for g in groups),
             'hak_akses': True if is_it_staff else any(getattr(g, 'x_bootcamp_hak_akses', False) for g in groups),
             'log_sistem': True if is_it_staff else any(getattr(g, 'x_bootcamp_log_sistem', False) for g in groups),
-            
-            # --- KUNCI ROLE LAMA ---
             'is_direktur': user.has_group('bootcamp_fapet.group_direktur'),
             'is_kepala_keuangan': user.has_group('bootcamp_fapet.group_kepala_keuangan'),
             'is_manajer_operasional': user.has_group('bootcamp_fapet.group_manajer_operasional'),
@@ -35,8 +32,6 @@ class KPIController(http.Controller):
     def input_kpi_aktual(self, **kw):
         user = request.env.user
         user_groups = self._get_permissions(user)
-
-        # ACCESS CONTROL berdasar matriks
         if not user_groups.get('input_kpi'):
             return request.redirect('/bootcamp/dashboard')
 

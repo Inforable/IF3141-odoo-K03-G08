@@ -68,7 +68,6 @@ class DashboardController(http.Controller):
         is_it_staff = user.has_group('bootcamp_fapet.group_staff_it')
         
         return {
-            # --- KUNCI MATRIKS BARU (Untuk Sidebar) ---
             'utama': True if is_it_staff else any(getattr(g, 'x_bootcamp_utama', False) for g in groups),
             'keuangan': any(getattr(g, 'x_bootcamp_keuangan', False) for g in groups),
             'pengadaan': any(getattr(g, 'x_bootcamp_pengadaan', False) for g in groups),
@@ -80,8 +79,6 @@ class DashboardController(http.Controller):
             'sinkron_pos': any(getattr(g, 'x_bootcamp_sinkron_pos', False) for g in groups),
             'hak_akses': True if is_it_staff else any(getattr(g, 'x_bootcamp_hak_akses', False) for g in groups),
             'log_sistem': True if is_it_staff else any(getattr(g, 'x_bootcamp_log_sistem', False) for g in groups),
-            
-            # --- KUNCI ROLE LAMA ---
             'is_direktur': user.has_group('bootcamp_fapet.group_direktur'),
             'is_kepala_keuangan': user.has_group('bootcamp_fapet.group_kepala_keuangan'),
             'is_manajer_operasional': user.has_group('bootcamp_fapet.group_manajer_operasional'),
@@ -93,11 +90,7 @@ class DashboardController(http.Controller):
     def dashboard_utama(self, **kwargs):
         dashboard_data = request.env['bootcamp.dashboard'].sudo().get_dashboard_data()
         user = request.env.user
-        
-        # Panggil izin berdasarkan matriks
         user_groups = self._get_permissions(user)
-
-        # Keamanan Akses
         if not user_groups.get('utama'):
             return request.redirect('/web')
 
@@ -109,12 +102,10 @@ class DashboardController(http.Controller):
 
         return request.render('bootcamp_fapet.template_dashboard_utama', values)
 
-    @http.route('/bootcamp/dashboard/keuangan', type='http', auth='user', website=False)
+    @http.route('/bootcamp/keuangan', type='http', auth='user', website=False)
     def dashboard_keuangan(self, periode='bulan', **kwargs):
         user = request.env.user
         user_groups = self._get_permissions(user)
-
-        # ACCESS CONTROL berdasar matriks
         if not user_groups.get('keuangan'):
             return request.redirect('/bootcamp/dashboard')
 
