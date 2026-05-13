@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_pos_sync" model="ir.actions.act_url">
+        <field name="name">Sinkronisasi Data POS</field>
+        <field name="url">/bootcamp/pos/sync</field>
+        <field name="target">self</field>
+    </record>
+
+    <template id="template_pos_sync" name="Sinkronisasi Data POS Bootcamp Fapet">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <style>
+                    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+                    body {
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                        background: #f5f5f5;
+                        display: flex;
+                        min-height: 100vh;
+                    }
+
+                    /* ========== CSS KONTEN UTAMA POS SYNC ========== */
+                    .main-content {
+                        margin-left: 240px;
+                        flex: 1;
+                        width: calc(100% - 240px);
+                        padding: 32px;
+                        min-height: 100vh;
+                    }
+                    .topbar {
+                        display: flex; justify-content: space-between; align-items: flex-start;
+                        margin-bottom: 28px;
+                    }
+                    .page-title { font-size: 1.6rem; font-weight: 700; color: #1a1a2e; }
+                    .page-subtitle { font-size: 0.875rem; color: #888; margin-top: 4px; }
+                    .topbar-date { font-size: 0.875rem; color: #888; }
+
+                    /* Banner Notifikasi */
+                    .alert {
+                        padding: 12px 18px; border-radius: 8px; margin-bottom: 20px;
+                        font-size: 0.875rem; font-weight: 600;
+                        display: flex; align-items: center; gap: 8px;
+                    }
+                    .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+                    .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+                    .alert-warn { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+
+                    /* Widget statistik */
+                    .stat-grid {
+                        display: grid; grid-template-columns: repeat(4, 1fr);
+                        gap: 16px; margin-bottom: 24px;
+                    }
+                    .stat-card {
+                        background: #fff; border-radius: 12px; padding: 20px;
+                        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+                    }
+                    .stat-top {
+                        display: flex; justify-content: space-between; align-items: flex-start;
+                        margin-bottom: 14px;
+                    }
+                    .stat-icon-wrap {
+                        width: 44px; height: 44px; border-radius: 10px;
+                        display: flex; align-items: center; justify-content: center;
+                        font-size: 1.2rem; color: #fff;
+                    }
+                    .icon-purple { background: #8b5cf6; }
+                    .icon-green  { background: #22c55e; }
+                    .icon-blue   { background: #3b82f6; }
+                    .icon-orange { background: #f97316; }
+                    .stat-value { font-size: 1.4rem; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+                    .stat-label { font-size: 0.8rem; color: #888; }
+                    .stat-sub { font-size: 0.78rem; color: #aaa; margin-top: 4px; }
+
+                    /* Panel sinkron + jadwal */
+                    .panel-grid {
+                        display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+                        margin-bottom: 24px;
+                    }
+                    .panel-card {
+                        background: #fff; border-radius: 12px; padding: 24px;
+                        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+                    }
+                    .panel-title {
+                        font-size: 1.1rem; font-weight: 700; color: #1a1a2e;
+                        margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+                    }
+                    .panel-text { font-size: 0.875rem; color: #555; line-height: 1.6; margin-bottom: 16px; }
+                    .info-row {
+                        display: flex; justify-content: space-between;
+                        padding: 10px 0; border-bottom: 1px solid #f3f4f6;
+                        font-size: 0.875rem;
+                    }
+                    .info-row:last-child { border-bottom: none; }
+                    .info-label { color: #888; }
+                    .info-value { color: #1a1a2e; font-weight: 600; }
+
+                    .btn-sync {
+                        background: #7c3aed; color: #fff; border: none; border-radius: 8px;
+                        padding: 14px 24px; font-size: 0.9rem; font-weight: 600;
+                        cursor: pointer; width: 100%;
+                        display: flex; justify-content: center; align-items: center; gap: 8px;
+                        transition: background 0.15s;
+                    }
+                    .btn-sync:hover { background: #6d28d9; }
+                    .btn-sync[disabled] { background: #c4b5fd; cursor: not-allowed; }
+
+                    /* Tabel riwayat */
+                    .history-card {
+                        background: #fff; border-radius: 12px; padding: 24px;
+                        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+                    }
+                    table.history-table {
+                        width: 100%; border-collapse: collapse;
+                    }
+                    .history-table th {
+                        text-align: left; font-size: 0.78rem; text-transform: uppercase;
+                        letter-spacing: 0.5px; color: #888; font-weight: 600;
+                        padding: 12px 8px; border-bottom: 2px solid #f3f4f6;
+                    }
+                    .history-table td {
+                        font-size: 0.875rem; color: #1a1a2e;
+                        padding: 14px 8px; border-bottom: 1px solid #f3f4f6;
+                    }
+                    .history-table tr:last-child td { border-bottom: none; }
+                    .badge-status {
+                        font-size: 0.72rem; font-weight: 600;
+                        padding: 4px 10px; border-radius: 12px;
+                        display: inline-block;
+                    }
+                    .badge-success { background: #dcfce7; color: #166534; }
+                    .badge-failed  { background: #fee2e2; color: #991b1b; }
+                    .badge-running { background: #fef3c7; color: #92400e; }
+                    .badge-trigger {
+                        font-size: 0.72rem; font-weight: 600;
+                        padding: 4px 10px; border-radius: 12px;
+                        background: #ede9fe; color: #5b21b6;
+                    }
+                </style>
+            </t>
+
+            <div style="display:flex; min-height:100vh; width:100%;">
+
+                <t t-call="bootcamp_fapet.component_sidebar">
+                    <t t-set="active_menu" t-value="'pos_sync'"/>
+                </t>
+
+                <div class="main-content">
+                    <div class="topbar">
+                        <div>
+                            <div class="page-title">Sinkronisasi Data POS</div>
+                            <div class="page-subtitle">ETL pipeline integrasi rfPOS → Database Dashboard</div>
+                        </div>
+                        <div class="topbar-date" id="current-date"/>
+                    </div>
+
+                    <t t-if="flash == 'ok'">
+                        <div class="alert alert-success">
+                            <i class="fa fa-check-circle"/> Sinkronisasi manual berhasil dijalankan.
+                        </div>
+                    </t>
+                    <t t-if="flash == 'failed'">
+                        <div class="alert alert-error">
+                            <i class="fa fa-exclamation-circle"/> Sinkronisasi gagal. Cek pesan error pada baris terbaru.
+                        </div>
+                    </t>
+                    <t t-if="flash == 'forbidden'">
+                        <div class="alert alert-warn">
+                            <i class="fa fa-lock"/> Anda tidak memiliki hak untuk memicu sinkronisasi manual.
+                        </div>
+                    </t>
+
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="stat-top">
+                                <div class="stat-icon-wrap icon-purple"><i class="fa fa-refresh"/></div>
+                            </div>
+                            <div class="stat-value">
+                                <t t-if="last_success">
+                                    <t t-esc="last_success.tanggal_mulai.strftime('%d/%m/%Y %H:%M')"/>
+                                </t>
+                                <t t-else="">Belum ada</t>
+                            </div>
+                            <div class="stat-label">Sinkronisasi Terakhir Berhasil</div>
+                            <t t-if="last_success">
+                                <div class="stat-sub">
+                                    <t t-esc="last_success.records_processed"/> record diproses
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-top">
+                                <div class="stat-icon-wrap icon-green"><i class="fa fa-database"/></div>
+                            </div>
+                            <div class="stat-value"><t t-esc="total_transaksi"/></div>
+                            <div class="stat-label">Total Transaksi Tersimpan</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-top">
+                                <div class="stat-icon-wrap icon-blue"><i class="fa fa-bolt"/></div>
+                            </div>
+                            <div class="stat-value"><t t-esc="total_record_diproses"/></div>
+                            <div class="stat-label">Total Record Disinkronkan</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-top">
+                                <div class="stat-icon-wrap icon-orange"><i class="fa fa-clock-o"/></div>
+                            </div>
+                            <div class="stat-value">
+                                <t t-if="cron_info">
+                                    <t t-esc="cron_info['interval']"/>
+                                </t>
+                                <t t-else="">N/A</t>
+                            </div>
+                            <div class="stat-label">Interval Cron Job</div>
+                            <t t-if="cron_info">
+                                <div class="stat-sub">
+                                    Status:
+                                    <t t-if="cron_info['active']">Aktif</t>
+                                    <t t-else="">Nonaktif</t>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <div class="panel-grid">
+
+                        <div class="panel-card">
+                            <div class="panel-title">
+                                <i class="fa fa-play-circle" style="color:#7c3aed;"/> Trigger Sinkronisasi Manual
+                            </div>
+                            <div class="panel-text">
+                                Jalankan pipeline ETL secara manual untuk menarik transaksi terbaru dari sistem POS eksisting (rfPOS).
+                                Proses ini akan: <b>Extract</b> data dari database POS sejak sinkronisasi sukses terakhir,
+                                <b>Transform</b> ke skema standar dashboard, dan <b>Load</b> ke basis data utama.
+                            </div>
+                            <form action="/bootcamp/pos/sync/run" method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <t t-set="can_trigger"
+                                   t-value="user_groups['is_staff_it'] or user_groups['is_direktur']"/>
+                                <button type="submit" class="btn-sync"
+                                        t-att-disabled="None if can_trigger else 'disabled'">
+                                    <i class="fa fa-refresh"/> Jalankan Sinkronisasi Sekarang
+                                </button>
+                                <t t-if="not can_trigger">
+                                    <div style="font-size:0.78rem; color:#888; margin-top:8px; text-align:center;">
+                                        Hanya Staff IT atau Direktur yang dapat memicu sinkronisasi manual.
+                                    </div>
+                                </t>
+                            </form>
+                        </div>
+
+                        <div class="panel-card">
+                            <div class="panel-title">
+                                <i class="fa fa-calendar-check-o" style="color:#7c3aed;"/> Konfigurasi Jadwal
+                            </div>
+                            <t t-if="cron_info">
+                                <div class="info-row">
+                                    <span class="info-label">Status Cron Job</span>
+                                    <span class="info-value">
+                                        <t t-if="cron_info['active']">Aktif</t>
+                                        <t t-else="">Nonaktif</t>
+                                    </span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Interval</span>
+                                    <span class="info-value"><t t-esc="cron_info['interval']"/></span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Eksekusi Berikutnya</span>
+                                    <span class="info-value">
+                                        <t t-if="cron_info['nextcall']">
+                                            <t t-esc="cron_info['nextcall'].strftime('%d/%m/%Y %H:%M')"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="panel-text">Cron job belum dikonfigurasi.</div>
+                            </t>
+                        </div>
+
+                    </div>
+
+                    <div class="history-card">
+                        <div class="panel-title">
+                            <i class="fa fa-history" style="color:#7c3aed;"/> Riwayat Sinkronisasi
+                        </div>
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Waktu</th>
+                                    <th>Pemicu</th>
+                                    <th>Status</th>
+                                    <th>Record</th>
+                                    <th>Durasi</th>
+                                    <th>Dipicu Oleh</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-if="not logs">
+                                    <tr>
+                                        <td colspan="6" style="text-align:center; color:#888; padding:24px 0;">
+                                            Belum ada riwayat sinkronisasi.
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-foreach="logs" t-as="log">
+                                    <tr>
+                                        <td><t t-esc="log.tanggal_mulai.strftime('%d/%m/%Y %H:%M:%S')"/></td>
+                                        <td>
+                                            <span class="badge-trigger">
+                                                <t t-if="log.trigger_type == 'manual'">Manual</t>
+                                                <t t-else="">Cron</t>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <t t-if="log.status == 'success'">
+                                                <span class="badge-status badge-success">Berhasil</span>
+                                            </t>
+                                            <t t-elif="log.status == 'failed'">
+                                                <span class="badge-status badge-failed">Gagal</span>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="badge-status badge-running">Running</span>
+                                            </t>
+                                        </td>
+                                        <td><t t-esc="log.records_processed"/></td>
+                                        <td><t t-esc="log.durasi_ms"/> ms</td>
+                                        <td><t t-esc="log.triggered_by_id.name or '-'"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <script>
+                var d = new Date();
+                var days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+                var months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+                var el = document.getElementById('current-date');
+                if (el) el.textContent = days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+            </script>
+        </t>
+    </template>
+</odoo>

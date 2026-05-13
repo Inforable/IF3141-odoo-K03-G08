@@ -10,6 +10,7 @@
     'depends': ['base', 'web'],
     'data': [
         'data/kpi_data.xml',
+        'data/pos_sync_data.xml',
         'security/bootcamp_groups.xml',
         'security/ir.model.access.csv',
         'views/kpi_aktual_views.xml',
@@ -17,6 +18,8 @@
         'views/component_sidebar.xml',
         'views/dashboard_utama_views.xml',
         'views/dashboard_keuangan_views.xml',
+        'views/biaya_operasional_views.xml',
+        'views/pos_sync_views.xml',
         'views/bootcamp_menus.xml',
     ],
     # 'demo': [

@@ -8,4 +8,6 @@
     <menuitem id="menu_konfigurasi" name="Konfigurasi Sistem" parent="menu_bootcamp_root" sequence="10" groups="bootcamp_fapet.group_staff_it"/>
     <menuitem id="menu_input_kpi_aktual" name="Input Ketercapaian KPI" parent="menu_bootcamp_root" sequence="5" action="action_kpi_aktual_qweb" groups="bootcamp_fapet.group_manajer_operasional,bootcamp_fapet.group_direktur"/>
     <menuitem id="menu_kelola_hak_akses" name="Kelola Hak Akses" parent="menu_bootcamp_root" sequence="11" action="action_kelola_hak_akses_qweb" groups="bootcamp_fapet.group_staff_it"/>
+    <menuitem id="menu_input_biaya_operasional" name="Input Biaya Operasional" parent="menu_bootcamp_root" sequence="6" action="action_biaya_operasional" groups="bootcamp_fapet.group_kepala_keuangan,bootcamp_fapet.group_direktur"/>
+    <menuitem id="menu_pos_sync" name="Sinkronisasi Data POS" parent="menu_konfigurasi" sequence="1" action="action_pos_sync" groups="bootcamp_fapet.group_staff_it,bootcamp_fapet.group_direktur"/>
 </odoo>
