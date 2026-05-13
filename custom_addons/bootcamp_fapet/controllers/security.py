@@ -4,6 +4,7 @@ from odoo.http import request
 
 class SecurityController(http.Controller):
 
+    # RUTE UTAMA: Menampilkan Halaman
     @http.route('/bootcamp/hak_akses', type='http', auth='user')
     def kelola_hak_akses(self, **kw):
         user = request.env.user
@@ -51,6 +52,7 @@ class SecurityController(http.Controller):
                 badges.extend(["Dashboard Keuangan", "Input Biaya Operasional"])
             
             user_list.append({
+                'id': u.id,  # <--- INI ADALAH KUNCI AGAR TOMBOL DELETE MUNCUL
                 'name': u.name,
                 'login': u.login,
                 'initial': u.name[0].upper() if u.name else 'U',
@@ -90,6 +92,7 @@ class SecurityController(http.Controller):
         
         return request.render('bootcamp_fapet.template_kelola_hak_akses', values)
     
+    # RUTE KEDUA: Tambah User
     @http.route('/bootcamp/hak_akses/submit', type='http', auth='user', methods=['POST'], csrf=True)
     def submit_user_baru(self, **post):
         if not request.env.user.has_group('bootcamp_fapet.group_staff_it'):
@@ -103,7 +106,7 @@ class SecurityController(http.Controller):
 
         if name and login and password and group_id:
             try:
-                # AMBIL ID GRUP "INTERNAL USER" BAWAAN ODOO
+                # Wajib mendapatkan ID "Internal User"
                 internal_user_group = request.env.ref('base.group_user').id
 
                 request.env['res.users'].sudo().create({
@@ -111,14 +114,32 @@ class SecurityController(http.Controller):
                     'login': login,
                     'password': password,
                     'groups_id': [
-                        (4, internal_user_group),   # Jadikan Internal User
-                        (4, int(group_id))          # Masukkan ke Role Bootcamp yang dipilih
+                        (4, internal_user_group), 
+                        (4, int(group_id))
                     ] 
                 })
             except Exception as e:
-                # Jika terjadi error di database (misal: username/login sudah dipakai orang lain)
-                # Odoo akan melempar psycopg2.IntegrityError.
                 pass
 
-        # Redirect kembali ke halaman kelola hak akses
+        return request.redirect('/bootcamp/hak_akses')
+
+    # RUTE KETIGA: Hapus User
+    @http.route('/bootcamp/hak_akses/delete/<int:user_id>', type='http', auth='user', methods=['POST'], csrf=True)
+    def delete_user(self, user_id, **post):
+        if not request.env.user.has_group('bootcamp_fapet.group_staff_it'):
+            return request.redirect('/bootcamp/dashboard')
+
+        # Cegah penghapusan Administrator (ID 1 & 2) atau akun sendiri
+        if user_id in [1, 2] or user_id == request.env.user.id:
+            return request.redirect('/bootcamp/hak_akses')
+
+        user_to_delete = request.env['res.users'].sudo().browse(user_id)
+        if user_to_delete.exists():
+            try:
+                # Coba hapus permanen dari PostgreSQL
+                user_to_delete.unlink()
+            except Exception as e:
+                # Jika terikat foreign key (punya riwayat data), arsipkan saja.
+                user_to_delete.write({'active': False})
+
         return request.redirect('/bootcamp/hak_akses')

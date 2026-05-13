@@ -74,6 +74,37 @@
                     .btn-edit:hover { background: #c7d2fe; }
                     .btn-save { background: #10b981; color: #fff; display: none; }
                     .btn-save:hover { background: #059669; }
+
+                    /* Custom Modal atau Toast Peringatan */
+                    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
+                    .modal-toast { background: #fff; border-radius: 12px; padding: 24px; width: 400px; max-width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: slideDown 0.3s ease-out; }
+                    @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+                    .modal-header { display: flex; align-items: center; gap: 12px; color: #dc2626; font-weight: 700; font-size: 1.1rem; margin-bottom: 12px; }
+                    .modal-body { font-size: 0.9rem; color: #4b5563; margin-bottom: 24px; line-height: 1.5; }
+                    .modal-actions { display: flex; justify-content: flex-end; gap: 12px; }
+                    .btn-cancel { background: #f3f4f6; color: #4b5563; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+                    .btn-cancel:hover { background: #e5e7eb; }
+                    .btn-confirm-delete { background: #dc2626; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+                    .btn-confirm-delete:hover { background: #b91c1c; }
+
+                    /* Tombol Delete User (Teks) */
+                    .btn-delete-user { 
+                        display: inline-block; 
+                        padding: 4px 10px; 
+                        background: #fee2e2; 
+                        border: 1px solid #fca5a5; 
+                        color: #dc2626; 
+                        cursor: pointer; 
+                        border-radius: 6px; 
+                        font-size: 0.75rem; 
+                        font-weight: 600; 
+                        transition: 0.2s; 
+                    }
+                    .btn-delete-user:hover { 
+                        background: #f87171; 
+                        color: #fff; 
+                        border-color: #f87171; 
+                    }
                 </style>
             </t>
 
@@ -141,7 +172,14 @@
                                                         <div class="uc-name"><t t-esc="u['name']"/></div>
                                                         <div class="uc-username"><t t-esc="u['login']"/></div>
                                                     </div>
-                                                    <div class="status-aktif">Aktif</div>
+                                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                                        <div class="status-aktif">Aktif</div>
+                                                        <t t-if="u.get('id') and u.get('id') not in [1, 2] and u.get('id') != user.id">
+                                                            <button type="button" class="btn-delete-user" t-att-data-id="u.get('id')" t-att-data-name="u['name']" onclick="showDeleteModal(this)" title="Hapus User">
+                                                                Hapus
+                                                            </button>
+                                                        </t>
+                                                    </div>
                                                 </div>
                                                 <div class="uc-role"><t t-esc="u['role_name']"/></div>
                                                 <div class="uc-badges">
@@ -216,6 +254,28 @@
                 </div>
             </div>
 
+            <!-- Modal Untuk Delete User -->
+            <form id="form-delete-user" method="post" style="display: none;">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            </form>
+
+            <div id="delete-modal" class="modal-overlay">
+                <div class="modal-toast">
+                    <div class="modal-header">
+                        <i class="fa fa-exclamation-triangle" style="font-size: 1.5rem;"/> Peringatan Berbahaya!
+                    </div>
+                    <div class="modal-body">
+                        Apakah Anda yakin ingin menghapus user <strong id="delete-user-name"></strong>?
+                        <br/><br/>
+                        <em>Catatan: Tindakan ini akan menghapus akun secara permanen. Jika user memiliki riwayat data, akun hanya akan dinonaktifkan (diarsipkan).</em>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Batal</button>
+                        <button type="button" class="btn-confirm-delete" onclick="executeDelete()">Ya, Hapus User</button>
+                    </div>
+                </div>
+            </div>
+
             <script>
                 // 1. Set Tanggal Hari Ini
                 var d = new Date();
@@ -251,6 +311,28 @@
                     
                     // Optional: Beri feedback visual
                     alert('Visual/UI Updated: Hak Akses disimpan! (Backend belum terhubung)');
+                }
+
+                // Logika Hapus User
+                var selectedUserId = null;
+
+                function showDeleteModal(btn) {
+                    selectedUserId = btn.getAttribute('data-id');
+                    document.getElementById('delete-user-name').textContent = '"' + btn.getAttribute('data-name') + '"';
+                    document.getElementById('delete-modal').style.display = 'flex';
+                }
+
+                function closeDeleteModal() {
+                    selectedUserId = null;
+                    document.getElementById('delete-modal').style.display = 'none';
+                }
+
+                function executeDelete() {
+                    if (selectedUserId) {
+                        var form = document.getElementById('form-delete-user');
+                        form.action = '/bootcamp/hak_akses/delete/' + selectedUserId;
+                        form.submit();
+                    }
                 }
             </script>
         </t>
