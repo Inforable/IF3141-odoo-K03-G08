@@ -3,7 +3,7 @@
 
     <record id="action_dashboard_sdm" model="ir.actions.act_url">
         <field name="name">Dashboard Operasional SDM (KPI)</field>
-        <field name="url">/bootcamp/dashboard/sdm</field>
+        <field name="url">/bootcamp/kpi</field>
         <field name="target">self</field>
     </record>
 
@@ -275,28 +275,28 @@
 
                                 <div class="kpi-header">
                                     <div class="kpi-title">
-                                        <t t-esc="row.divisi"/>
+                                        <t t-esc="row['divisi']"/>
                                     </div>
 
                                     <div class="kpi-badge">
-                                        <t t-esc="row.avg_percent"/>%
+                                        <t t-esc="row['avg_percent']"/>%
                                     </div>
                                 </div>
 
-                                <t t-foreach="row.kpis" t-as="k">
+                                <t t-foreach="row['kpis']" t-as="k">
 
                                     <div class="kpi-indicator">
-                                        <t t-esc="k.indikator"/>
+                                        <t t-esc="k['indikator']"/>
                                     </div>
 
                                     <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                                        <span>Target: <t t-esc="k.target"/></span>
-                                        <span>Aktual: <t t-esc="k.latest_actual or '-'"/></span>
+                                        <span>Target: <t t-esc="k['target']"/></span>
+                                        <span>Aktual: <t t-esc="k['latest_actual'] or '-'"/></span>
                                     </div>
 
                                     <div class="progress">
                                         <div class="progress-bar"
-                                             t-att-style="'width:'+str(min(100,k.percent))+'%'">
+                                             t-att-style="'width:'+str(min(100,k['percent']))+'%'">
                                         </div>
                                     </div>
 
@@ -305,10 +305,10 @@
                                 <!-- Circular Progress -->
                                 <div class="circle-wrap">
                                     <div class="circle"
-                                         t-att-style="'--percent:'+str(row.avg_percent)">
+                                         t-att-style="'--percent:'+str(row['avg_percent'])">
 
                                         <div class="circle-inner">
-                                            <t t-esc="row.avg_percent"/>%
+                                            <t t-esc="row['avg_percent']"/>%
                                         </div>
 
                                     </div>

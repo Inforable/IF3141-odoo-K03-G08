@@ -91,7 +91,7 @@
                     </a>
                 </t>
                 <t t-if="user_groups.get('target_kpi')">
-                    <a href="/bootcamp/kpi/target"
+                    <a href="/bootcamp/kpi/targets"
                        t-att-class="'nav-item ' + ('active' if active_menu == 'target_kpi' else '')">
                         <i class="fa fa-bullseye"/> Target KPI
                     </a>
@@ -108,12 +108,12 @@
                         <i class="fa fa-users"/> Kelola Hak Akses
                     </a>
                 </t>
-                <t t-if="user_groups.get('log_sistem')">
+                <!-- <t t-if="user_groups.get('log_sistem')">
                     <a href="/bootcamp/log-sistem"
                        t-att-class="'nav-item ' + ('active' if active_menu == 'log_sistem' else '')">
                         <i class="fa fa-history"/> Log Sistem
                     </a>
-                </t>
+                </t> -->
 
             </nav>
 

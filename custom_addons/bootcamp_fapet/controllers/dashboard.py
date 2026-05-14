@@ -78,7 +78,7 @@ class DashboardController(http.Controller):
             'target_kpi': any(getattr(g, 'x_bootcamp_target_kpi', False) for g in groups),
             'sinkron_pos': any(getattr(g, 'x_bootcamp_sinkron_pos', False) for g in groups),
             'hak_akses': True if is_it_staff else any(getattr(g, 'x_bootcamp_hak_akses', False) for g in groups),
-            'log_sistem': True if is_it_staff else any(getattr(g, 'x_bootcamp_log_sistem', False) for g in groups),
+            # 'log_sistem': True if is_it_staff else any(getattr(g, 'x_bootcamp_log_sistem', False) for g in groups),
             'is_direktur': user.has_group('bootcamp_fapet.group_direktur'),
             'is_kepala_keuangan': user.has_group('bootcamp_fapet.group_kepala_keuangan'),
             'is_manajer_operasional': user.has_group('bootcamp_fapet.group_manajer_operasional'),
@@ -133,16 +133,10 @@ class DashboardController(http.Controller):
 
         return request.render('bootcamp_fapet.template_dashboard_keuangan', values)
 
-    @http.route('/bootcamp/dashboard/sdm', type='http', auth='user', website=False)
+    @http.route('/bootcamp/kpi', type='http', auth='user', website=False)
     def dashboard_sdm(self, **kwargs):
         user = request.env.user
-        user_groups = {
-            'is_direktur': user.has_group('bootcamp_fapet.group_direktur'),
-            'is_kepala_keuangan': user.has_group('bootcamp_fapet.group_kepala_keuangan'),
-            'is_manajer_operasional': user.has_group('bootcamp_fapet.group_manajer_operasional'),
-            'is_kepala_prosesing': user.has_group('bootcamp_fapet.group_kepala_prosesing'),
-            'is_staff_it': user.has_group('bootcamp_fapet.group_staff_it'),
-        }
+        user_groups = self._get_permissions(user)
 
         # optional filters from querystring
         divisi = kwargs.get('divisi')
@@ -158,7 +152,7 @@ class DashboardController(http.Controller):
             'user': user,
             'user_groups': user_groups,
             'kpi_summary': kpi_summary,
-            'divisions': sorted(set(divisions)),
+            'divisions': sorted(set(d for d in divisions if d)),
         }
         return request.render('bootcamp_fapet.template_dashboard_sdm', values)
 
