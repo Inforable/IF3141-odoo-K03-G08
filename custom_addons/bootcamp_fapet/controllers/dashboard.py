@@ -118,3 +118,76 @@ class DashboardController(http.Controller):
         }
 
         return request.render('bootcamp_fapet.template_dashboard_keuangan', values)
+
+    @http.route('/bootcamp/dashboard/sdm', type='http', auth='user', website=False)
+    def dashboard_sdm(self, **kwargs):
+        user = request.env.user
+        user_groups = {
+            'is_direktur': user.has_group('bootcamp_fapet.group_direktur'),
+            'is_kepala_keuangan': user.has_group('bootcamp_fapet.group_kepala_keuangan'),
+            'is_manajer_operasional': user.has_group('bootcamp_fapet.group_manajer_operasional'),
+            'is_kepala_prosesing': user.has_group('bootcamp_fapet.group_kepala_prosesing'),
+            'is_staff_it': user.has_group('bootcamp_fapet.group_staff_it'),
+        }
+
+        # optional filters from querystring
+        divisi = kwargs.get('divisi')
+        date_from = kwargs.get('date_from')
+        date_to = kwargs.get('date_to')
+
+        kpi_summary = request.env['bootcamp.kpi.target'].get_kpi_summary(divisi=divisi, date_from=date_from, date_to=date_to)
+
+        # provide list of available divisions for filter UI
+        divisions = request.env['bootcamp.kpi.target'].sudo().search([]).mapped('divisi')
+
+        values = {
+            'user': user,
+            'user_groups': user_groups,
+            'kpi_summary': kpi_summary,
+            'divisions': sorted(set(divisions)),
+        }
+        return request.render('bootcamp_fapet.template_dashboard_sdm', values)
+
+    @http.route('/bootcamp/api/kpi_summary', type='json', auth='user')
+    def api_kpi_summary(self, divisi=None, date_from=None, date_to=None, **kw):
+        data = request.env['bootcamp.dashboard'].get_kpi_summary(divisi=divisi, date_from=date_from, date_to=date_to)
+        return {'status': 'ok', 'data': data}
+
+    @http.route('/bootcamp/kpi/targets', type='http', auth='user', website=False)
+    def kpi_targets(self, **kwargs):
+        user = request.env.user
+        # only manager operational or staff IT can manage targets
+        if not user.has_group('bootcamp_fapet.group_manajer_operasional') and not user.has_group('bootcamp_fapet.group_staff_it'):
+            return request.redirect('/bootcamp/dashboard')
+
+        targets = request.env['bootcamp.kpi.target'].sudo().search([], order='divisi,indikator')
+        values = {
+            'user': user,
+            'targets': targets,
+        }
+        return request.render('bootcamp_fapet.template_kpi_targets', values)
+
+    @http.route('/bootcamp/kpi/targets/submit', type='http', auth='user', methods=['POST'], csrf=True)
+    def kpi_targets_submit(self, **post):
+        user = request.env.user
+        if not user.has_group('bootcamp_fapet.group_manajer_operasional') and not user.has_group('bootcamp_fapet.group_staff_it'):
+            return request.redirect('/bootcamp/dashboard')
+
+        target_id = post.get('target_id')
+        indikator = post.get('indikator')
+        divisi = post.get('divisi')
+        target_nilai = post.get('target_nilai')
+
+        vals = {
+            'indikator': indikator,
+            'divisi': divisi,
+            'target_nilai': float(target_nilai) if target_nilai else 0.0,
+        }
+
+        if target_id:
+            rec = request.env['bootcamp.kpi.target'].sudo().browse(int(target_id))
+            rec.sudo().write(vals)
+        else:
+            request.env['bootcamp.kpi.target'].sudo().create(vals)
+
+        return request.redirect('/bootcamp/kpi/targets')

@@ -17,6 +17,60 @@ class KPITarget(models.Model):
     ], string='Divisi', required=True)
     target_nilai = fields.Float(string='Target Nilai', required=True)
 
+    @api.model
+    def get_kpi_summary(self, divisi=None, date_from=None, date_to=None):
+        """Return summary per division based on targets and latest actuals.
+
+        This method aggregates per `divisi` using latest `bootcamp.kpi.aktual` record
+        for each target. Optional filters `divisi`, `date_from`, `date_to` apply to
+        actual records.
+        """
+        KPIActual = self.env['bootcamp.kpi.aktual']
+
+        domains = []
+        if divisi:
+            domains.append(('divisi', '=', divisi))
+
+        targets = self.search(domains)
+        divisions = {}
+
+        for tgt in targets:
+            act_dom = [('kpi_target_id', '=', tgt.id)]
+            if date_from:
+                act_dom.append(('tanggal', '>=', date_from))
+            if date_to:
+                act_dom.append(('tanggal', '<=', date_to))
+
+            actual = KPIActual.search(act_dom, order='tanggal desc, id desc', limit=1)
+            if actual and tgt.target_nilai and tgt.target_nilai > 0:
+                perc = (actual.nilai_aktual / tgt.target_nilai) * 100.0
+            else:
+                perc = 0.0
+
+            div = tgt.divisi or 'Unknown'
+            if div not in divisions:
+                divisions[div] = {'count': 0, 'sum_perc': 0.0, 'items': []}
+
+            divisions[div]['count'] += 1
+            divisions[div]['sum_perc'] += perc
+            divisions[div]['items'].append({
+                'indikator': tgt.indikator,
+                'target': tgt.target_nilai,
+                'latest_actual': actual.nilai_aktual if actual else None,
+                'percent': round(perc, 2),
+            })
+
+        result = []
+        for div, data in divisions.items():
+            avg = (data['sum_perc'] / data['count']) if data['count'] else 0.0
+            result.append({
+                'divisi': div,
+                'avg_percent': round(avg, 2),
+                'kpis': data['items'],
+            })
+
+        return result
+
 class KPIAktual(models.Model):
     _name = 'bootcamp.kpi.aktual'
     _description = 'Input Ketercapaian KPI Aktual'

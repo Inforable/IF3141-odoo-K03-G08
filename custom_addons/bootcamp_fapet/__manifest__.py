@@ -16,6 +16,8 @@
         'views/component_sidebar.xml',
         'views/dashboard_utama_views.xml',
         'views/dashboard_keuangan_views.xml',
+        'views/dashboard_sdm_views.xml',
+        'views/kpi_targets_views.xml',
         'views/bootcamp_menus.xml',
     ],
     # 'demo': [
