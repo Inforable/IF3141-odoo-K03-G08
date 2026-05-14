@@ -175,7 +175,7 @@
                                     <i class="fa fa-arrow-up"/> +12.5%
                                 </span>
                             </div>
-                            <div class="widget-value" id="val-pendapatan">Rp 0</div>
+                            <div class="widget-value" t-esc="dashboard_data['total_pendapatan']['value']"/>
                             <div class="widget-label">Total Pendapatan Bulan Ini</div>
                         </div>
                         <div class="widget-card">
@@ -187,7 +187,7 @@
                                     <i class="fa fa-arrow-down"/> -5.2%
                                 </span>
                             </div>
-                            <div class="widget-value" id="val-biaya">Rp 0</div>
+                            <div class="widget-value" t-esc="dashboard_data['biaya_operasional']['value']"/>
                             <div class="widget-label">Biaya Operasional Bulan Ini</div>
                         </div>
                         <div class="widget-card">
@@ -199,7 +199,7 @@
                                     <i class="fa fa-arrow-up"/> +8.3%
                                 </span>
                             </div>
-                            <div class="widget-value" id="val-stok">0 Unit</div>
+                            <div class="widget-value" t-esc="dashboard_data['stok_bahan_baku']['value']"/>
                             <div class="widget-label">Stok Bahan Baku</div>
                         </div>
                         <div class="widget-card">
@@ -211,7 +211,7 @@
                                     <i class="fa fa-arrow-up"/> +3.1%
                                 </span>
                             </div>
-                            <div class="widget-value" id="val-kpi">0%</div>
+                            <div class="widget-value" t-esc="dashboard_data['rata_kpi']['value']"/>
                             <div class="widget-label">Rata-rata KPI Divisi</div>
                         </div>
                     </div>
@@ -242,47 +242,21 @@
                         <div class="panel-card">
                             <div class="panel-title">Aktivitas Terkini</div>
                             <div class="activity-list">
-                                <!--
-                                    PLACEHOLDER — ganti dengan t-foreach ke model LogSistem
-                                    saat model sudah diimplementasi.
-                                    Contoh struktur data yang dibutuhkan:
-                                    aktivitas_list = [
-                                        {'nama': 'Kepala Keuangan', 'aksi': 'Menginput biaya operasional', 'waktu': '5 menit yang lalu', 'initial': 'K'},
-                                        ...
-                                    ]
-                                -->
-                                <div class="activity-item">
-                                    <div class="activity-avatar av-purple">K</div>
-                                    <div class="activity-body">
-                                        <div class="activity-name">Kepala Keuangan</div>
-                                        <div class="activity-desc">Menginput biaya operasional</div>
+                                <t t-if="not dashboard_data.get('aktivitas_list')">
+                                    <div class="empty-state">Belum ada aktivitas terkini.</div>
+                                </t>
+                                <t t-foreach="dashboard_data.get('aktivitas_list', [])" t-as="akt">
+                                    <div class="activity-item">
+                                        <div class="activity-avatar av-purple">
+                                            <t t-esc="akt['initial']"/>
+                                        </div>
+                                        <div class="activity-body">
+                                            <div class="activity-name" t-esc="akt['nama']"/>
+                                            <div class="activity-desc" t-esc="akt['aksi']"/>
+                                        </div>
+                                        <div class="activity-time" t-esc="akt['waktu']"/>
                                     </div>
-                                    <div class="activity-time">5 menit yang lalu</div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="activity-avatar av-dark">K</div>
-                                    <div class="activity-body">
-                                        <div class="activity-name">Kepala Produksi</div>
-                                        <div class="activity-desc">Memperbarui stok bahan baku</div>
-                                    </div>
-                                    <div class="activity-time">1 jam yang lalu</div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="activity-avatar av-gray">M</div>
-                                    <div class="activity-body">
-                                        <div class="activity-name">Manajer Operasional</div>
-                                        <div class="activity-desc">Menetapkan target KPI divisi</div>
-                                    </div>
-                                    <div class="activity-time">2 jam yang lalu</div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="activity-avatar av-dark">I</div>
-                                    <div class="activity-body">
-                                        <div class="activity-name">IT Staff</div>
-                                        <div class="activity-desc">Sinkronisasi data POS berhasil</div>
-                                    </div>
-                                    <div class="activity-time">3 jam yang lalu</div>
-                                </div>
+                                </t>
                             </div>
                         </div>
 

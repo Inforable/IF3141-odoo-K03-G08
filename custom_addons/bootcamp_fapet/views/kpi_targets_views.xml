@@ -278,7 +278,7 @@
                                            name="indikator"
                                            id="indikator"
                                            placeholder="Contoh: Efisiensi Produksi (%)"
-                                           required/>
+                                           required="required"/>
                                 </div>
 
                                 <div class="form-group">
@@ -292,7 +292,7 @@
                                            name="target_nilai"
                                            id="target_nilai"
                                            placeholder="0-100"
-                                           required/>
+                                           required="required"/>
                                 </div>
 
                                 <div class="form-group">

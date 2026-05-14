@@ -206,7 +206,7 @@
 
                 <!-- SIDEBAR -->
                 <t t-call="bootcamp_fapet.component_sidebar">
-                    <t t-set="active_menu" t-value="'utama'"/>
+                    <t t-set="active_menu" t-value="'kpi'"/>
                 </t>
 
                 <!-- CONTENT -->
@@ -225,7 +225,7 @@
 
                         <div class="summary-card">
                             <div class="summary-label">Rata-rata KPI</div>
-                            <div class="summary-value">98.2%</div>
+                            <div class="summary-value"><t t-esc="'%.1f%%' % overall_avg"/></div>
                         </div>
 
                         <div class="summary-card">
@@ -275,28 +275,28 @@
 
                                 <div class="kpi-header">
                                     <div class="kpi-title">
-                                        <t t-esc="row.divisi"/>
+                                        <t t-esc="row['divisi']"/>
                                     </div>
 
                                     <div class="kpi-badge">
-                                        <t t-esc="row.avg_percent"/>%
+                                        <t t-esc="row['avg_percent']"/>%
                                     </div>
                                 </div>
 
-                                <t t-foreach="row.kpis" t-as="k">
+                                <t t-foreach="row['kpis']" t-as="k">
 
                                     <div class="kpi-indicator">
-                                        <t t-esc="k.indikator"/>
+                                        <t t-esc="k['indikator']"/>
                                     </div>
 
                                     <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                                        <span>Target: <t t-esc="k.target"/></span>
-                                        <span>Aktual: <t t-esc="k.latest_actual or '-'"/></span>
+                                        <span>Target: <t t-esc="k['target']"/></span>
+                                        <span>Aktual: <t t-esc="k['latest_actual'] or '-'"/></span>
                                     </div>
 
                                     <div class="progress">
                                         <div class="progress-bar"
-                                             t-att-style="'width:'+str(min(100,k.percent))+'%'">
+                                             t-att-style="'width:'+str(min(100, k['percent']))+'%'">
                                         </div>
                                     </div>
 
@@ -305,10 +305,10 @@
                                 <!-- Circular Progress -->
                                 <div class="circle-wrap">
                                     <div class="circle"
-                                         t-att-style="'--percent:'+str(row.avg_percent)">
+                                         t-att-style="'--percent:'+str(row['avg_percent'])">
 
                                         <div class="circle-inner">
-                                            <t t-esc="row.avg_percent"/>%
+                                            <t t-esc="row['avg_percent']"/>%
                                         </div>
 
                                     </div>
@@ -327,7 +327,9 @@
                             Tren KPI 4 Bulan Terakhir
                         </div>
 
-                        <canvas id="kpiChart" height="120"></canvas>
+                        <canvas id="kpiChart" height="120"
+                            t-att-data-labels="trend_labels"
+                            t-att-data-values="trend_data"/>
 
                     </div>
 
@@ -335,28 +337,38 @@
             </div>
 
             <script>
-
-                const ctx = document.getElementById('kpiChart');
-
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr'],
-                        datasets: [{
-                            label: 'Rata-rata KPI',
-                            data: [90, 92, 93, 95]
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: true
+                (function() {
+                    var canvas = document.getElementById('kpiChart');
+                    if (canvas &amp;&amp; typeof Chart !== 'undefined') {
+                        var labels = JSON.parse(canvas.dataset.labels || '[]');
+                        var values = JSON.parse(canvas.dataset.values || '[]');
+                        new Chart(canvas, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Rata-rata KPI (%)',
+                                    data: values,
+                                    backgroundColor: 'rgba(124,58,237,0.7)',
+                                    borderColor: '#7c3aed',
+                                    borderWidth: 1,
+                                    borderRadius: 6,
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: { legend: { display: true } },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        max: 100,
+                                        ticks: { callback: function(v) { return v + '%'; } }
+                                    }
+                                }
                             }
-                        }
+                        });
                     }
-                });
-
+                })();
             </script>
 
         </t>
