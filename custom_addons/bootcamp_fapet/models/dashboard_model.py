@@ -29,8 +29,8 @@ class BootcampDashboard(models.TransientModel):
         ])
         total_biaya = sum(biaya_records.mapped('nominal'))
 
-        # Stok Bahan Baku: sum stok_akhir semua bahan
-        total_stok = self.env['bootcamp.stok.bahan.baku'].sudo().get_total_stok()
+        # Stok Bahan Baku: sum stok semua bahan dari model procurement
+        total_stok = sum(self.env['bahan.baku'].sudo().search([]).mapped('stok'))
 
         # Rata-rata KPI: avg persentase_capaian bulan ini
         kpi_records = self.env['bootcamp.kpi.aktual'].sudo().search([

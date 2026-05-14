@@ -225,10 +225,10 @@
                                     <a href="/bootcamp/biaya-operasional" class="aksi-btn">Input Biaya Operasional</a>
                                 </t>
                                 <t t-if="user_groups['is_direktur'] or user_groups['is_kepala_prosesing']">
-                                    <a href="#" class="aksi-btn">Update Stok Bahan Baku</a>
+                                    <a href="/bootcamp/stok-bahan-baku" class="aksi-btn">Update Stok Bahan Baku</a>
                                 </t>
                                 <t t-if="user_groups['is_direktur'] or user_groups['is_manajer_operasional']">
-                                    <a href="#" class="aksi-btn">Atur Target KPI</a>
+                                    <a href="/bootcamp/kpi/targets" class="aksi-btn">Atur Target KPI</a>
                                 </t>
                                 <t t-if="user_groups['is_direktur'] or user_groups['is_staff_it']">
                                     <a href="/bootcamp/pos/sync" class="aksi-btn">Sinkronisasi Data POS</a>
