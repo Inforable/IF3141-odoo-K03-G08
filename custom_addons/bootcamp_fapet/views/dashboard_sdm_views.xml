@@ -226,7 +226,7 @@
 
                         <div class="summary-card">
                             <div class="summary-label">Rata-rata KPI</div>
-                            <div class="summary-value"><t t-esc="'%.1f%%' % overall_avg"/></div>
+                            <div class="summary-value"><t t-esc="overall_avg"/></div>
                         </div>
 
                         <div class="summary-card">

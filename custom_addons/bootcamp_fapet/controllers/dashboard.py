@@ -277,7 +277,7 @@ class DashboardController(http.Controller):
             'user': user,
             'user_groups': user_groups,
             'kpi_summary': kpi_summary,
-            'overall_avg': round(overall_avg, 1),
+            'overall_avg': '{:.1f}%'.format(overall_avg),
             'divisions': sorted(set(d for d in divisions if d)),
             'trend_labels': json.dumps(trend_labels),
             'trend_data': json.dumps(trend_data),
@@ -294,6 +294,7 @@ class DashboardController(http.Controller):
     @http.route('/bootcamp/kpi/targets', type='http', auth='user', website=False)
     def kpi_targets(self, **kwargs):
         user = request.env.user
+        user_groups = self._get_permissions(user)
         if not user.has_group('bootcamp_fapet.group_manajer_operasional') and \
                 not user.has_group('bootcamp_fapet.group_staff_it'):
             return request.redirect('/bootcamp/dashboard')
@@ -301,6 +302,7 @@ class DashboardController(http.Controller):
         targets = request.env['bootcamp.kpi.target'].sudo().search([], order='divisi,indikator')
         values = {
             'user': user,
+            'user_groups': user_groups,
             'targets': targets,
         }
         return request.render('bootcamp_fapet.template_kpi_targets', values)
