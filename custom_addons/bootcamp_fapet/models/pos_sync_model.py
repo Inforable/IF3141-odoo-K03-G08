@@ -108,7 +108,34 @@ class PosSyncLog(models.Model):
 
     @api.model
     def _extract_pos_data(self, since_ts):
-        """Mock Extract step. Pada implementasi nyata akan query DB rfPOS via FDW/ODBC."""
+        """Dual-path extract: native pos.order.line jika tersedia, fallback ke mock."""
+        if 'pos.order.line' in self.env.registry:
+            return self._extract_from_native_pos(since_ts)
+        return self._extract_mock(since_ts)
+
+    @api.model
+    def _extract_from_native_pos(self, since_ts):
+        """Baca dari pos.order.line Odoo native."""
+        lines = self.env['pos.order.line'].sudo().search([
+            ('order_id.date_order', '>', fields.Datetime.to_string(since_ts)),
+            ('order_id.state', 'in', ['done', 'invoiced', 'paid']),
+        ], order='order_id.date_order asc')
+        rows = []
+        for line in lines:
+            order = line.order_id
+            rows.append({
+                'pos_id': 'POS-%s-%s' % (order.name or order.id, line.id),
+                'timestamp': order.date_order,
+                'menu_name': line.product_id.name if line.product_id else 'Unknown',
+                'qty': int(line.qty),
+                'unit_price': line.price_unit,
+                'cashier_name': order.user_id.name if order.user_id else 'Kasir',
+            })
+        return rows
+
+    @api.model
+    def _extract_mock(self, since_ts):
+        """Mock Extract — digunakan saat modul point_of_sale tidak aktif."""
         menu_pool = [
             ('Nasi Goreng Spesial', 25000),
             ('Mie Ayam Bakso', 22000),
