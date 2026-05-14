@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Sample Bahan Baku (Raw Materials) Data -->
+        
+        <record id="bahan_baku_tepung_terigu" model="bahan.baku">
+            <field name="name">Tepung Terigu Premium</field>
+            <field name="category">Bahan Utama</field>
+            <field name="uom">kg</field>
+            <field name="stok">850</field>
+            <field name="min_stok">500</field>
+        </record>
+
+        <record id="bahan_baku_gula_pasir" model="bahan.baku">
+            <field name="name">Gula Pasir</field>
+            <field name="category">Bahan Utama</field>
+            <field name="uom">kg</field>
+            <field name="stok">420</field>
+            <field name="min_stok">300</field>
+        </record>
+
+        <record id="bahan_baku_mentega" model="bahan.baku">
+            <field name="name">Mentega</field>
+            <field name="category">Bahan Utama</field>
+            <field name="uom">kg</field>
+            <field name="stok">180</field>
+            <field name="min_stok">200</field>
+        </record>
+
+        <record id="bahan_baku_coklat_bubuk" model="bahan.baku">
+            <field name="name">Coklat Bubuk</field>
+            <field name="category">Bahan Tambahan</field>
+            <field name="uom">kg</field>
+            <field name="stok">95</field>
+            <field name="min_stok">100</field>
+        </record>
+
+        <record id="bahan_baku_telur" model="bahan.baku">
+            <field name="name">Telur</field>
+            <field name="category">Bahan Utama</field>
+            <field name="uom">butir</field>
+            <field name="stok">1200</field>
+            <field name="min_stok">500</field>
+        </record>
+
+        <record id="bahan_baku_susu_cair" model="bahan.baku">
+            <field name="name">Susu Cair</field>
+            <field name="category">Bahan Utama</field>
+            <field name="uom">liter</field>
+            <field name="stok">50</field>
+            <field name="min_stok">30</field>
+        </record>
+
+        <record id="bahan_baku_vanilla" model="bahan.baku">
+            <field name="name">Vanilla Extract</field>
+            <field name="category">Bahan Tambahan</field>
+            <field name="uom">ml</field>
+            <field name="stok">150</field>
+            <field name="min_stok">100</field>
+        </record>
+
+        <record id="bahan_baku_baking_powder" model="bahan.baku">
+            <field name="name">Baking Powder</field>
+            <field name="category">Bahan Tambahan</field>
+            <field name="uom">kg</field>
+            <field name="stok">25</field>
+            <field name="min_stok">20</field>
+        </record>
+    </data>
+</odoo>

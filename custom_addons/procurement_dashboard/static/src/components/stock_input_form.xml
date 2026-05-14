@@ -1,0 +1,232 @@
+<templates xml:space="preserve">
+    <t t-name="procurement_dashboard.StockInputForm">
+        <div class="o_stock_input_form p-4 bg-light" style="height: 100vh; overflow: hidden;">
+            <div class="mb-4">
+                <h2 class="fw-bold">Input Stok Bahan Baku</h2>
+                <p class="text-muted">Form input dan pembaruan stok bahan baku</p>
+            </div>
+
+            <div class="row" style="height: calc(100vh - 150px); overflow: hidden;">
+                <!-- Form Section -->
+                <div class="col-md-6" style="overflow-y: auto; max-height: calc(100vh - 150px);">
+                    <div class="card border-0 shadow-sm p-4">
+                        <h4 class="card-title fw-bold mb-4">Update Stok Bahan Baku</h4>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Pilih Bahan Baku <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <select class="form-select" 
+                                        t-on-change="onMaterialChange"
+                                        t-att-value="state.formData.material_id">
+                                    <option value="">-- Pilih Bahan Baku --</option>
+                                    <t t-foreach="state.materials" t-as="material" t-key="material.id">
+                                        <option t-att-value="material.id">
+                                            <t t-out="material.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                                <button class="btn btn-outline-secondary" type="button"
+                                        t-on-click="toggleNewMaterialForm"
+                                        title="Tambah Bahan Baku Baru">
+                                    +
+                                </button>
+                            </div>
+                        </div>
+
+                        <t t-if="state.showNewMaterialForm">
+                            <div class="alert alert-info mb-3">
+                                <h6 class="fw-bold mb-3">Buat Bahan Baku Baru</h6>
+                                
+                                <div class="mb-2">
+                                    <label class="form-label">Nama Bahan Baku</label>
+                                    <input type="text" class="form-control" placeholder="Contoh: Telur Ayam"
+                                           t-att-value="state.newMaterial.name"
+                                           t-on-change="onNewMaterialNameChange"/>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Kategori</label>
+                                        <select class="form-select"
+                                                t-att-value="state.newMaterial.category"
+                                                t-on-change="onNewMaterialCategoryChange">
+                                            <option value="Bahan Utama">Bahan Utama</option>
+                                            <option value="Bahan Tambahan">Bahan Tambahan</option>
+                                            <option value="Packaging">Packaging</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Satuan</label>
+                                        <input type="text" class="form-control" placeholder="kg, liter, butir, dll"
+                                               t-att-value="state.newMaterial.uom"
+                                               t-on-change="onNewMaterialUomChange"/>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Stok Awal</label>
+                                        <input type="number" class="form-control" placeholder="0"
+                                               t-att-value="state.newMaterial.stok"
+                                               t-on-change="onNewMaterialStokChange"
+                                               step="0.01" min="0"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Stok Minimum</label>
+                                        <input type="number" class="form-control" placeholder="0"
+                                               t-att-value="state.newMaterial.min_stok"
+                                               t-on-change="onNewMaterialMinStokChange"
+                                               step="0.01" min="0"/>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" type="button"
+                                            t-on-click="createNewMaterial"
+                                            t-att-disabled="state.loading">
+                                        Buat Bahan Baku
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" type="button"
+                                            t-on-click="cancelNewMaterialForm">
+                                        Batal
+                                    </button>
+                                </div>
+                            </div>
+                        </t>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Jumlah <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" placeholder="Masukkan jumlah"
+                                   t-att-value="state.formData.quantity"
+                                   t-on-change="onQuantityChange"
+                                   step="0.01" min="0"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tipe Transaksi <span class="text-danger">*</span></label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="transaction_type" id="in" 
+                                       value="in" t-att-checked="state.formData.transaction_type === 'in'"
+                                       t-on-change="onTransactionTypeChange"/>
+                                <label class="btn btn-outline-success" for="in">Tambah Stok</label>
+                                
+                                <input type="radio" class="btn-check" name="transaction_type" id="out" 
+                                       value="out" t-att-checked="state.formData.transaction_type === 'out'"
+                                       t-on-change="onTransactionTypeChange"/>
+                                <label class="btn btn-outline-danger" for="out">Kurangi Stok</label>
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Display Stok Sekarang</label>
+                                <input type="number" class="form-control" t-att-value="state.currentStock" readonly="readonly"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Display Stok Setelah</label>
+                                <input type="number" class="form-control fw-bold" 
+                                       t-att-value="state.stockAfter"
+                                       t-attf-class="form-control fw-bold #{state.stockAfter &lt; 0 ? 'border-danger' : ''}"
+                                       readonly="readonly"/>
+                            </div>
+                        </div>
+                        
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Catatan Perubahan Stok</label>
+                            <textarea class="form-control" rows="3" placeholder="Tambahkan catatan..."
+                                      t-att-value="state.formData.notes"
+                                      t-on-change="(ev) => this.state.formData.notes = ev.target.value"></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-primary btn-lg fw-bold" 
+                                    t-on-click="submitForm"
+                                    t-att-disabled="state.loading">
+                                <t t-if="state.loading">Menyimpan...</t>
+                                <t t-else="">Simpan Perubahan Stok</t>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stok Saat Ini and Riwayat Transaksi -->
+                <div class="col-md-6 d-flex flex-column gap-3" style="overflow-y: auto; max-height: calc(100vh - 150px);">
+                    
+                    <!-- Stok Saat Ini Card -->
+                    <div class="card border-0 shadow-sm" style="max-height: 45%; display: flex; flex-direction: column;">
+                        <div class="px-4 pt-4 pb-4 " style="flex-shrink: 0; background: #fff; border-bottom: 1px solid #eee;">
+                            <h4 class="card-title fw-bold mb-0">Stok Saat Ini</h4>
+                        </div>
+                        <div style="overflow-y: auto; flex: 1; padding: 0 1rem 1rem 1rem;">
+                            <t t-if="state.materials.length === 0">
+                                <div class="text-center text-muted py-4">
+                                    <p>Belum ada data bahan baku</p>
+                                </div>
+                            </t>
+                            <t t-if="state.materials.length > 0">
+                                <div class="list-group list-group-flush">
+                                    <t t-foreach="state.materials" t-as="material" t-key="material.id">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center py-2 px-0 border-0 border-bottom">
+                                            <div>
+                                                <p class="mb-0 text-dark fw-bold"><t t-out="material.name"/></p>
+                                            </div>
+                                            <div class="text-end">
+                                                <p class="mb-0 text-dark fw-bold">
+                                                    <t t-out="material.stok"/>
+                                                    <span class="text-muted fw-normal ms-1">
+                                                        <t t-out="material.uom ? material.uom : 'unit'"/>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- Riwayat Transaksi Card -->
+                    <div class="card border-0 shadow-sm" style="max-height: 45%; display: flex; flex-direction: column;">
+                        <div class="px-4 pt-4 pb-4" style="flex-shrink: 0; background: #fff; border-bottom: 1px solid #eee;">
+                            <h4 class="card-title fw-bold mb-0">Riwayat Transaksi</h4>
+                        </div>
+                        <div style="overflow-y: auto; flex: 1; padding: 0 1rem 1rem 1rem;">
+                            <t t-if="state.recentTransactions.length === 0">
+                                <div class="text-center text-muted py-4">
+                                    <p>Belum ada riwayat input stok</p>
+                                </div>
+                            </t>
+                            <t t-if="state.recentTransactions.length > 0">
+                                <div class="d-flex flex-column gap-2 pt-2">
+                                    <t t-foreach="state.recentTransactions" t-as="trans" t-key="trans.id">
+                                        <div class="d-flex align-items-start gap-3 py-2 px-3 rounded"
+                                            t-attf-style="border-left: 4px solid #{trans.type === 'Tambah' ? '#28a745' : '#dc3545'}; background: #F8F9FA">
+                                            <div class="flex-grow-1">
+                                                <p class="mb-1 text-dark fw-bold"><t t-out="trans.material"/></p>
+                                                <small class="text-muted d-block">Stok akhir: <t t-out="trans.stock_after"/></small>
+                                                <small class="text-muted d-block"><t t-out="trans.date"/></small>
+                                                <t t-if="trans.notes">
+                                                    <small class="text-muted d-block mt-1">Catatan: <t t-out="trans.notes"/></small>
+                                                </t>
+                                            </div>
+                                            <div class="text-end">
+                                                <t t-if="trans.type === 'Tambah'">
+                                                    <span class="badge bg-success fw-bold" style="font-size: 0.9rem;">+<t t-out="trans.quantity"/></span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="badge bg-danger fw-bold" style="font-size: 0.9rem;">-<t t-out="trans.quantity"/></span>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

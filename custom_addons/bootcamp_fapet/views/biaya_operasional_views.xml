@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_biaya_operasional" model="ir.actions.act_url">
+        <field name="name">Input Biaya Operasional</field>
+        <field name="url">/bootcamp/biaya-operasional</field>
+        <field name="target">self</field>
+    </record>
+
+    <template id="template_biaya_operasional" name="Input Biaya Operasional Bootcamp Fapet">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <style>
+                    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+                    body {
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                        background: #f5f5f5;
+                        display: flex;
+                        min-height: 100vh;
+                    }
+
+                    /* ========== CSS KONTEN UTAMA BIAYA OPERASIONAL ========== */
+                    .main-content {
+                        margin-left: 240px;
+                        flex: 1;
+                        width: calc(100% - 240px);
+                        padding: 32px;
+                        min-height: 100vh;
+                    }
+                    .topbar {
+                        display: flex; justify-content: space-between; align-items: flex-start;
+                        margin-bottom: 28px;
+                    }
+                    .page-title { font-size: 1.6rem; font-weight: 700; color: #1a1a2e; }
+                    .page-subtitle { font-size: 0.875rem; color: #888; margin-top: 4px; }
+                    .topbar-date { font-size: 0.875rem; color: #888; }
+
+                    /* Banner Notifikasi */
+                    .alert {
+                        padding: 12px 18px; border-radius: 8px; margin-bottom: 20px;
+                        font-size: 0.875rem; font-weight: 600;
+                        display: flex; align-items: center; gap: 8px;
+                    }
+                    .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+                    .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+                    /* Ringkasan Total */
+                    .summary-card {
+                        background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+                        color: #fff; border-radius: 12px; padding: 20px 24px;
+                        margin-bottom: 24px;
+                        display: flex; justify-content: space-between; align-items: center;
+                        box-shadow: 0 4px 12px rgba(124,58,237,0.25);
+                    }
+                    .summary-label { font-size: 0.85rem; opacity: 0.85; margin-bottom: 6px; }
+                    .summary-value { font-size: 1.75rem; font-weight: 700; }
+                    .summary-icon {
+                        width: 56px; height: 56px; background: rgba(255,255,255,0.18);
+                        border-radius: 12px; display: flex; align-items: center; justify-content: center;
+                        font-size: 1.6rem;
+                    }
+
+                    /* Layout Grid 2 Kolom */
+                    .input-layout {
+                        display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+                        width: 100%;
+                    }
+
+                    .panel-card {
+                        background: #fff; border-radius: 12px; padding: 24px;
+                        box-shadow: 0 1px 4px rgba(0,0,0,0.06); align-self: start;
+                    }
+                    .panel-title {
+                        font-size: 1.1rem; font-weight: 700; color: #1a1a2e;
+                        margin-bottom: 24px; display: flex; align-items: center; gap: 8px;
+                    }
+
+                    /* Form Elements */
+                    .form-group { margin-bottom: 20px; }
+                    .form-label {
+                        display: block; font-size: 0.875rem; font-weight: 600;
+                        color: #1a1a2e; margin-bottom: 8px;
+                    }
+                    .form-control {
+                        width: 100%; padding: 12px 14px; border: 1px solid #e5e7eb;
+                        border-radius: 8px; font-size: 0.875rem; transition: border-color 0.15s;
+                        color: #333; background: #fff;
+                    }
+                    .form-control:focus { outline: none; border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+                    textarea.form-control { resize: vertical; min-height: 84px; font-family: inherit; }
+                    .btn-submit {
+                        background: #6d4c41; color: #fff; border: none; border-radius: 8px;
+                        padding: 14px 24px; font-size: 0.9rem; font-weight: 600;
+                        cursor: pointer; width: 100%; margin-top: 10px;
+                        display: flex; justify-content: center; align-items: center; gap: 8px;
+                        transition: background 0.15s;
+                    }
+                    .btn-submit:hover { background: #5d4037; }
+
+                    /* Daftar Riwayat */
+                    .entry-item {
+                        padding: 16px; border: 1px solid #f3f4f6; border-radius: 8px;
+                        margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
+                    }
+                    .entry-item:last-child { margin-bottom: 0; }
+                    .entry-title { font-weight: 600; font-size: 0.95rem; color: #1a1a2e; margin-bottom: 4px; }
+                    .entry-meta { font-size: 0.8rem; color: #888; }
+                    .entry-value-wrap { text-align: right; }
+                    .entry-value { font-weight: 700; color: #7c3aed; font-size: 1rem; margin-bottom: 4px; }
+                    .badge-jenis {
+                        font-size: 0.7rem; background: #ede9fe; color: #5b21b6;
+                        padding: 3px 8px; border-radius: 12px; font-weight: 600;
+                    }
+                </style>
+            </t>
+
+            <div style="display:flex; min-height:100vh; width:100%;">
+
+                <t t-call="bootcamp_fapet.component_sidebar">
+                    <t t-set="active_menu" t-value="'biaya_operasional'"/>
+                </t>
+
+                <div class="main-content">
+                    <div class="topbar">
+                        <div>
+                            <div class="page-title">Input Biaya Operasional</div>
+                            <div class="page-subtitle">Form pencatatan biaya operasional harian Divisi Keuangan</div>
+                        </div>
+                        <div class="topbar-date" id="current-date"/>
+                    </div>
+
+                    <t t-if="submitted == 'ok'">
+                        <div class="alert alert-success">
+                            <i class="fa fa-check-circle"/> Data biaya operasional berhasil disimpan.
+                        </div>
+                    </t>
+                    <t t-if="submitted == 'invalid'">
+                        <div class="alert alert-error">
+                            <i class="fa fa-exclamation-triangle"/> Data tidak valid. Pastikan tanggal, jenis biaya, dan nominal sudah terisi.
+                        </div>
+                    </t>
+
+                    <div class="summary-card">
+                        <div>
+                            <div class="summary-label">Total Biaya Operasional Bulan Ini</div>
+                            <div class="summary-value">
+                                Rp <t t-esc="'{:,.0f}'.format(total_bulan).replace(',', '.')"/>
+                            </div>
+                        </div>
+                        <div class="summary-icon">
+                            <i class="fa fa-credit-card"/>
+                        </div>
+                    </div>
+
+                    <div class="input-layout">
+
+                        <div class="panel-card">
+                            <div class="panel-title">
+                                <i class="fa fa-file-text-o" style="color:#7c3aed;"/> Form Input Biaya
+                            </div>
+
+                            <form action="/bootcamp/biaya-operasional/submit" method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fa fa-calendar-o" style="color:#888; margin-right:4px;"/> Tanggal
+                                    </label>
+                                    <input type="date" name="tanggal" class="form-control"
+                                           required="required" id="input-tanggal"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Jenis Biaya</label>
+                                    <select name="jenis_biaya" class="form-control" required="required">
+                                        <option value="">Pilih Jenis Biaya...</option>
+                                        <option value="bahan_baku">Bahan Baku</option>
+                                        <option value="penggajian">Penggajian Harian</option>
+                                        <option value="overhead">Overhead</option>
+                                        <option value="utilitas">Utilitas</option>
+                                        <option value="pemasaran">Pemasaran</option>
+                                        <option value="lain">Lain-lain</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Divisi</label>
+                                    <select name="divisi" class="form-control" required="required">
+                                        <option value="Keuangan">Keuangan</option>
+                                        <option value="Produksi">Produksi</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="IT">IT</option>
+                                        <option value="HR">HR</option>
+                                        <option value="Marketing">Marketing</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fa fa-money" style="color:#888; margin-right:4px;"/> Nominal (Rp)
+                                    </label>
+                                    <input type="number" step="1" min="1" name="nominal"
+                                           class="form-control" placeholder="Contoh: 500000"
+                                           required="required"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Keterangan</label>
+                                    <textarea name="keterangan" class="form-control"
+                                              placeholder="Deskripsi singkat biaya (opsional)..."/>
+                                </div>
+
+                                <button type="submit" class="btn-submit">
+                                    <i class="fa fa-save"/> Simpan Biaya Operasional
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="panel-card">
+                            <div class="panel-title">
+                                <i class="fa fa-history" style="color:#7c3aed;"/> Riwayat 10 Entri Terbaru
+                            </div>
+                            <div>
+                                <t t-if="not biaya_list">
+                                    <div style="text-align:center; color:#888; padding:30px 0; font-size:0.9rem;">
+                                        Belum ada entri biaya operasional.
+                                    </div>
+                                </t>
+                                <t t-foreach="biaya_list" t-as="biaya">
+                                    <div class="entry-item">
+                                        <div>
+                                            <div class="entry-title">
+                                                <t t-esc="jenis_label.get(biaya.jenis_biaya, biaya.jenis_biaya)"/>
+                                            </div>
+                                            <div class="entry-meta">
+                                                <t t-esc="biaya.tanggal.strftime('%d %B %Y')"/> • Divisi <t t-esc="biaya.divisi"/>
+                                                <t t-if="biaya.keterangan"> • <t t-esc="biaya.keterangan"/></t>
+                                            </div>
+                                        </div>
+                                        <div class="entry-value-wrap">
+                                            <div class="entry-value">
+                                                Rp <t t-esc="'{:,.0f}'.format(biaya.nominal).replace(',', '.')"/>
+                                            </div>
+                                            <span class="badge-jenis">
+                                                <t t-esc="jenis_label.get(biaya.jenis_biaya, biaya.jenis_biaya)"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                var d = new Date();
+                var inputTanggal = document.getElementById('input-tanggal');
+                if (inputTanggal &amp;&amp; !inputTanggal.value) inputTanggal.valueAsDate = d;
+
+                var days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+                var months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+                var el = document.getElementById('current-date');
+                if (el) el.textContent = days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+            </script>
+        </t>
+    </template>
+</odoo>

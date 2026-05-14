@@ -3,7 +3,7 @@
 
     <record id="action_dashboard_keuangan" model="ir.actions.act_url">
         <field name="name">Dashboard Keuangan</field>
-        <field name="url">/bootcamp/dashboard/keuangan</field>
+        <field name="url">/bootcamp/keuangan</field>
         <field name="target">self</field>
     </record>
 
@@ -182,15 +182,15 @@
                     <!-- Filter Bar (UC-04) -->
                     <div class="filter-bar">
                         <span class="filter-label"><i class="fa fa-filter"/> Filter Periode:</span>
-                        <a t-att-href="'/bootcamp/dashboard/keuangan?periode=hari'"
+                        <a t-att-href="'/bootcamp/keuangan?periode=hari'"
                            t-att-class="'filter-pill' + (' active' if periode == 'hari' else '')">
                             <i class="fa fa-calendar-o"/> Hari Ini
                         </a>
-                        <a t-att-href="'/bootcamp/dashboard/keuangan?periode=bulan'"
+                        <a t-att-href="'/bootcamp/keuangan?periode=bulan'"
                            t-att-class="'filter-pill' + (' active' if periode == 'bulan' else '')">
                             <i class="fa fa-calendar"/> Bulan Ini
                         </a>
-                        <a t-att-href="'/bootcamp/dashboard/keuangan?periode=tahun'"
+                        <a t-att-href="'/bootcamp/keuangan?periode=tahun'"
                            t-att-class="'filter-pill' + (' active' if periode == 'tahun' else '')">
                             <i class="fa fa-calendar-check-o"/> Tahun Ini
                         </a>
