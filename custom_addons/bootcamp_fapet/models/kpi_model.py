@@ -11,6 +11,7 @@ class KPITarget(models.Model):
         ('Produksi', 'Produksi'),
         ('Keuangan', 'Keuangan'),
         ('Processing', 'Processing'),
+        ('Pelayanan', 'Pelayanan'),
         ('IT', 'IT'),
         ('HR', 'HR'),
         ('Marketing', 'Marketing')
@@ -19,12 +20,6 @@ class KPITarget(models.Model):
 
     @api.model
     def get_kpi_summary(self, divisi=None, date_from=None, date_to=None):
-        """Return summary per division based on targets and latest actuals.
-
-        This method aggregates per `divisi` using latest `bootcamp.kpi.aktual` record
-        for each target. Optional filters `divisi`, `date_from`, `date_to` apply to
-        actual records.
-        """
         KPIActual = self.env['bootcamp.kpi.aktual']
 
         domains = []
