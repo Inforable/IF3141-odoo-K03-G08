@@ -202,7 +202,7 @@
                                     <i class="fa fa-dollar"/>
                                 </div>
                                 <span class="widget-trend trend-up">
-                                    <i class="fa fa-arrow-up"/> +12.5%
+                                    <i class="fa fa-arrow-up"/>
                                 </span>
                             </div>
                             <div class="widget-value" t-esc="total_pendapatan"/>
@@ -214,7 +214,7 @@
                                     <i class="fa fa-line-chart"/>
                                 </div>
                                 <span class="widget-trend trend-down">
-                                    <i class="fa fa-arrow-down"/> -5.2%
+                                    <i class="fa fa-arrow-down"/>
                                 </span>
                             </div>
                             <div class="widget-value" t-esc="total_biaya"/>
@@ -226,7 +226,7 @@
                                     <i class="fa fa-check-circle"/>
                                 </div>
                                 <span class="widget-trend trend-up">
-                                    <i class="fa fa-arrow-up"/> +8.3%
+                                    <i class="fa fa-arrow-up"/>
                                 </span>
                             </div>
                             <div class="widget-value" t-esc="laba_bersih"/>
@@ -238,7 +238,7 @@
                                     <i class="fa fa-percent"/>
                                 </div>
                                 <span class="widget-trend trend-up">
-                                    <i class="fa fa-arrow-up"/> +3.1%
+                                    <i class="fa fa-arrow-up"/>
                                 </span>
                             </div>
                             <div class="widget-value" t-esc="margin"/>
