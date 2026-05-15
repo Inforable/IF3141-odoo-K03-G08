@@ -284,12 +284,22 @@ class DashboardController(http.Controller):
         }
         return request.render('bootcamp_fapet.template_dashboard_sdm', values)
 
-    @http.route('/bootcamp/api/kpi_summary', type='json', auth='user')
-    def api_kpi_summary(self, divisi=None, date_from=None, date_to=None, **kw):
-        data = request.env['bootcamp.kpi.target'].get_kpi_summary(
+    @http.route('/bootcamp/api/kpi_summary', type='http', auth='user', methods=['POST'], csrf=False)
+    def api_kpi_summary(self, **kw):
+        try:
+            body = json.loads(request.httprequest.data or '{}')
+        except ValueError:
+            body = {}
+        divisi = body.get('divisi') or None
+        date_from = body.get('date_from') or None
+        date_to = body.get('date_to') or None
+        data = request.env['bootcamp.kpi.target'].sudo().get_kpi_summary(
             divisi=divisi, date_from=date_from, date_to=date_to
         )
-        return {'status': 'ok', 'data': data}
+        return request.make_response(
+            json.dumps({'status': 'ok', 'data': data}),
+            headers=[('Content-Type', 'application/json')]
+        )
 
     @http.route('/bootcamp/kpi/targets', type='http', auth='user', website=False)
     def kpi_targets(self, **kwargs):

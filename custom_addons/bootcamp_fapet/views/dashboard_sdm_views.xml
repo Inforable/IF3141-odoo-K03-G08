@@ -270,7 +270,7 @@
                     <!-- KPI GRID -->
                     <div id="kpi-grid" class="kpi-grid">
                         <t t-foreach="kpi_summary" t-as="row">
-                            <div class="kpi-card" data-divisi="<t t-esc="row['divisi']"/>">
+                            <div class="kpi-card" t-att-data-divisi="row['divisi']">
                                 <div class="kpi-header">
                                     <div class="kpi-title"><t t-esc="row['divisi']"/></div>
                                     <div class="kpi-badge"><t t-esc="row['avg_percent']"/>%</div>
@@ -310,10 +310,10 @@
                 </div>
             </div>
 
-            <script>
+            <script><![CDATA[
                 (function() {
                     var canvas = document.getElementById('kpiChart');
-                    if (canvas &amp;&amp; typeof Chart !== 'undefined') {
+                    if (canvas && typeof Chart !== 'undefined') {
                         var labels = JSON.parse(canvas.dataset.labels || '[]');
                         var values = JSON.parse(canvas.dataset.values || '[]');
                         window._kpiChart = new Chart(canvas, {
@@ -405,7 +405,7 @@
                         }
                     });
                 });
-            </script>
+            ]]></script>
 
         </t>
     </template>
