@@ -1,106 +1,213 @@
-# IF3141 Sistem Informasi - Odoo Setup
+# Sistem Dashboard Terintegrasi Bootcamp Fapet Unpad
 
-## Introduction
+## Kelompok dan Identitas
 
-Odoo merupakan *Enterprise Resource Planning System* yang mampu melakukan implementasi modul modul kustom untuk menyelesaikan permasalahan proses bisnis pada suatu perusahaan.
+* **Nomor Kelompok:** G08
+* **Nomor Kelas:** K03
 
-Odoo memberikan opsi *on-premise solution* sehingga developer dapat melakukan implementasi kustom modul pada local environment.
+### Anggota Kelompok
 
-Repository ini diperuntukkan untuk Tugas Besar IF3141 Sistem Informasi. Untuk memulai silakan melakukan fork dan membuat repository private untuk workspace setiap kelompok.
+| NIM      | Nama                       |
+| -------- | -------------------------- |
+| 13523129 | Ivant Samuel Silaban       |
+| 13523144 | Muhamad Nazih Najmudin     |
+| 13523124 | Muhammad Raihaan Perdana   |
+| 13523156 | Hasri Fayadh Muqaffa       |
+| 13523150 | Benedictus Nelson          |
+| 13523138 | Samantha Laqueenna Ginting |
 
+---
 
-## Pre-requisites
-Odoo diimplementasikan dengan Python environment dan database PostgreSQL. Repository ini sudah membungkus service aplikasi dan database melalui Docker.
+# Nama Sistem dan Perusahaan
 
-Sebelum memulai, pastikan dependency berikut sudah terpasang:
+## Nama Sistem
 
-1. Docker Desktop
-	- Download: https://www.docker.com/products/docker-desktop/
-2. Python 3.11
-	- Digunakan untuk virtual environment (venv) pada proses development modul
+**Sistem Dashboard Terintegrasi Bootcamp Fapet Unpad**
 
-## Struktur Direktori
+## Nama Perusahaan
 
-- `/config`
-	- Untuk menyimpan konfigurasi Odoo
-- `/custom_addons`
-	- Tempat pengerjaan modul kustom
-- `/dump`
-	- Database dump yang dapat diakses scripts untuk proses import/export
-- `/scripts`
-	- Untuk melakukan database migration
-- `docker-compose.yml`
-	- Orchestration service Odoo dan PostgreSQL
+**Bootcamp Fapet Unpad**
 
-## Step-by-step Installation
+---
 
-1. Jalankan service Odoo dan PostgreSQL:
+# Deskripsi Sistem
 
-	```bash
-	docker compose up -d
-	```
+Sistem Dashboard Terintegrasi Bootcamp Fapet Unpad merupakan sistem informasi berbasis dashboard yang dirancang untuk membantu proses monitoring operasional, pengelolaan keuangan, pengadaan bahan baku, pengukuran KPI, serta sinkronisasi data transaksi Point of Sale (POS) pada Bootcamp Fapet Unpad. Sistem ini dibangun menggunakan platform Odoo dan mengintegrasikan berbagai data operasional perusahaan ke dalam satu sistem terpusat yang mudah digunakan oleh berbagai divisi perusahaan.
 
-2. Buka aplikasi pada browser:
-	- http://localhost:8069
+Melalui sistem ini, pengguna dapat memantau kondisi bisnis secara real-time melalui dashboard interaktif yang menampilkan statistik keuangan, pengadaan, dan performa KPI perusahaan. Selain itu, sistem juga menyediakan fitur input biaya operasional, pengelolaan stok bahan baku, sinkronisasi transaksi POS, serta manajemen hak akses berbasis role (Role-Based Access Control / RBAC). Dengan adanya sistem ini, proses pengambilan keputusan menjadi lebih cepat, efisiensi operasional meningkat, serta mendukung transformasi digital dan standarisasi operasional perusahaan.
 
-3. Login menggunakan kredensial default:
-	- Username: `admin`
-	- Password: `admin`
+---
 
-4. Aktifkan mode developer:
-	- Masuk ke **Settings**
-	- Nyalakan **Developer Mode / Developer Access**
+# Cara Menjalankan Sistem
 
-5. Buat Python virtual environment pada workspace:
+## 1. Clone Repository
 
-	```bash
-	python3.11 -m venv .venv
-	source .venv/bin/activate
-	pip install --upgrade pip
-	pip install -r requirements.txt
-	```
-
-6. Implementasikan modul pada folder:
-	- `custom_addons/`
-
-7. Setelah implementasi modul selesai, lakukan update daftar aplikasi:
-	- Masuk ke menu **Apps**
-	- Pilih **Update Apps List**
-
-8. Jika melakukan perubahan terhadap isi modul (modifying database), jangan lupa lakukan langkah database migration dengan mengikuti step di heading bawah ini.
-
-## Database Migration
-
-Odoo menggunakan local database pada implementasinya. Maka dari itu dibutuhkan migration system yang dapat dilakukan melakukan **dump db** atau **import db**. Sebelum melakukan migration jangan lupa untuk selalu mematikan service odoo & databasenya dengan menjalankan :
-
-```bash 
-docker compose down
+```bash
+git clone https://github.com/Inforable/IF3141-odoo-K03-G08.git
+cd IF3141-odoo-K03-G08
 ```
 
-Apabila terdapat perubahan pada database dan perubahan tersebut ingin diteruskan ke anggota tim lain, lakukan export database terlebih dahulu menggunakan script pada folder `scripts`.
+Expected Result:
 
-- macOS/Linux:
+* Source code berhasil terunduh ke komputer lokal.
 
-  ```bash
-  ./scripts/export_db.sh
-  ```
+---
 
-- Windows:
+## 2. Jalankan Docker Container
 
-  ```bat
-  scripts\export_db.cmd
-  ```
+```bash
+docker compose up -d
+```
 
-Untuk melanjutkan pengerjaan dari hasil perubahan database rekan tim, lakukan import database terlebih dahulu :
+Expected Result:
 
-- macOS/Linux:
+* Container Odoo dan PostgreSQL berhasil berjalan.
 
-  ```bash
-  ./scripts/import_db.sh
-  ```
+---
 
-- Windows:
+## 3. Akses Sistem Odoo
 
-  ```bat
-  scripts\import_db.cmd
-  ```
+Buka browser dan akses:
+
+```text
+http://localhost:8069
+```
+
+Expected Result:
+
+* Halaman login sistem berhasil ditampilkan.
+
+![Login](screenshots/login.png)
+
+---
+
+## 4. Login ke Sistem
+
+Masukkan username dan password sesuai role pengguna.
+
+Expected Result:
+
+* Pengguna berhasil masuk ke Dashboard Utama.
+
+![Dashboard Utama](screenshots/dashboard%20utama.png)
+
+---
+
+## 5. Mengakses Dashboard Keuangan
+
+Klik menu **Dashboard Keuangan** pada sidebar.
+
+Expected Result:
+
+* Statistik dan visualisasi keuangan tampil secara real-time.
+
+![Dashboard Keuangan](screenshots/dashboard%20keuangan.png)
+
+---
+
+## 6. Mengakses Dashboard Pengadaan
+
+Klik menu **Dashboard Pengadaan** pada sidebar.
+
+Expected Result:
+
+* Informasi stok dan pengadaan bahan baku berhasil ditampilkan.
+
+![Dashboard Pengadaan](screenshots/dashboard%20pengadaan.png)
+
+---
+
+## 7. Mengakses Dashboard KPI
+
+Klik menu **Dashboard KPI** pada sidebar.
+
+Expected Result:
+
+* Statistik KPI dan progress pencapaian divisi berhasil ditampilkan.
+
+![Dashboard KPI](screenshots/dashboard%20operasional%20kpi.png)
+
+---
+
+## 8. Input Biaya Operasional
+
+Klik menu **Input Biaya Operasional**.
+
+Expected Result:
+
+* Form input biaya operasional berhasil ditampilkan dan data dapat disimpan.
+
+![Input Biaya Operasional](screenshots/input%20biaya%20operasional.png)
+
+---
+
+## 9. Input Stok Bahan Baku
+
+Klik menu **Input Stok Bahan Baku**.
+
+Expected Result:
+
+* Form input stok bahan baku berhasil ditampilkan.
+
+![Input Stok](screenshots/input%20stok%20bahan%20baku.png)
+
+---
+
+## 10. Input Target KPI
+
+Klik menu **Target KPI**.
+
+Expected Result:
+
+* Form input target KPI berhasil ditampilkan.
+
+![Target KPI](screenshots/target%20kpi.png)
+
+---
+
+## 11. Sinkronisasi POS
+
+Klik menu **Sinkronisasi POS**.
+
+Expected Result:
+
+* Statistik sinkronisasi POS dan tombol sinkronisasi manual berhasil ditampilkan.
+
+![Sinkronisasi POS](screenshots/sinkronisasi%20data%20pos.png)
+
+---
+
+## 12. Kelola Hak Akses
+
+Klik menu **Kelola Hak Akses**.
+
+Expected Result:
+
+* Halaman pengelolaan user dan role berhasil ditampilkan.
+
+![Kelola Hak Akses](screenshots/kelola%20hak%20akses.png)
+
+---
+
+# Kredensial Role Pengguna
+
+| Role | Username | Password |
+|---|---|---|
+| Direktur | direktur | direktur123 |
+| Kepala Keuangan | keuangan | keuangan123 |
+| Manajer Operasional | manajer | manajer123 |
+| Kepala Prosesing | prosesing | prosesing123 |
+| Kepala Produksi | produksi | produksi123 |
+| Staff IT | it | it123 |
+| Staff Marketing | marketing | marketing123 |
+| Staff Pelayanan | pelayanan | pelayanan123 |
+
+> Catatan: Hak akses tiap akun telah disesuaikan dengan Role-Based Access Control (RBAC) yang diimplementasikan pada sistem.
+
+---
+
+# Kesimpulan dan Saran
+
+Sistem Dashboard Terintegrasi Bootcamp Fapet Unpad berhasil mengintegrasikan proses monitoring operasional, pengelolaan keuangan, pengadaan bahan baku, KPI, serta sinkronisasi POS ke dalam satu sistem informasi terpusat berbasis dashboard. Implementasi sistem ini membantu meningkatkan efisiensi operasional, mempercepat pengambilan keputusan, dan meningkatkan transparansi data perusahaan secara real-time.
+
+Untuk pengembangan selanjutnya, sistem dapat ditingkatkan dengan integrasi mobile application, notifikasi otomatis berbasis event, analitik prediktif, serta integrasi cloud deployment agar sistem lebih scalable dan mendukung ekspansi bisnis perusahaan di masa mendatang.
